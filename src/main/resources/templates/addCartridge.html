@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<label>Зарегистрировать картридж</label>
+<form action="/addCartridge" method="post">
+    <label>S/N</label>
+    <br>
+    <textarea name="serialNumbers"></textarea>
+    <br>
+    <label>Модель картриджа</label>
+    <br>
+    <select>
+        <div th:each="model : ${cartridgeModels}">
+            <option th:text="${model.cartridgeModelName}"></option>
+        </div>
+    </select>
+    <br>
+    <input type = submit value="Зарегистрировать картридж">
+</form>
+<a href="addModelOfCartridge">Создать модель картриджа</a>
+</body>
+</html>
