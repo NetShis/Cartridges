@@ -1,23 +1,25 @@
 package ru.komiufps.cartridges.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-public class СartridgeModel {
+public class OrderForCartridge {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JsonProperty(value = "cartridgeModel")
-    @Column(unique = true)
-    private String cartridgeModel;
+    @OneToOne
+    @JsonProperty(value = "consumer")
+    private Consumer consumer;
+
 
 }
-
