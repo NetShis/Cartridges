@@ -7,26 +7,27 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
 @Entity
-public class OrderProcessing {
+public class ListCartridgeForConsumer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
-    private OrderForCartridge orderForCartridge;
+    @ManyToOne
+    @JsonProperty(value = "orderForConsumer")
+    private OrderForConsumer orderForConsumer;
 
     @OneToOne
     @JsonProperty(value = "cartridge")
     private Cartridge cartridge;
 
-    private Timestamp dateTheCartridgeWasTaken;
-
-    private Timestamp dateTheCartridgeWasReturn;
+    private LocalDateTime dateTheCartridgeWasReturn;
 
     @OneToOne
     @JsonProperty(value = "cartridgeStatus")

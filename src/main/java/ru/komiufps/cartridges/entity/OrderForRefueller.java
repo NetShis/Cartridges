@@ -1,25 +1,28 @@
 package ru.komiufps.cartridges.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-public class OrderForCartridge {
-
+public class OrderForRefueller {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @OneToOne
-    @JsonProperty(value = "consumer")
-    private Consumer consumer;
+    @JsonProperty(value = "refueller")
+    private Refueller refueller;
 
+    private LocalDateTime orderDate;
 
+    public OrderForRefueller() {
+        orderDate = LocalDateTime.now();
+    }
 }

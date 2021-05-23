@@ -27,7 +27,7 @@ public class Cartridge {
     @JsonProperty(value = "isDecommissioned")
     private boolean isDecommissioned;
 
-    @JsonProperty(value = "registrationDate")
+    //@JsonProperty(value = "registrationDate")
     private LocalDate registrationDate;
 
     public Cartridge() {
