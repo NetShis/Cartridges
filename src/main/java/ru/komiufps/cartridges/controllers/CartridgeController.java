@@ -39,6 +39,4 @@ public class CartridgeController {
         cartridgeStatusService.addСartridgeStatus(cartridgeStatus);
     }
 
-
-
 }
