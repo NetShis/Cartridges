@@ -11,6 +11,8 @@ import ru.komiufps.cartridges.service.CartridgeService;
 import ru.komiufps.cartridges.service.OrderForConsumerService;
 import ru.komiufps.cartridges.service.ListCartridgeForConsumerService;
 
+import java.util.Optional;
+
 @Controller
 @RestController
 @RequiredArgsConstructor
@@ -28,8 +30,14 @@ public class OrderController {
 
     @GetMapping("/getOrder")
     public ListCartridgeForConsumer getOrder(@RequestParam(value = "serialNumber") String serialNumber) {
-        Cartridge cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
+        Cartridge cartridge = null;
+        try {
+            cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return listCartridgeForConsumerService.getOrderForCartridge(cartridge);
     }
+
 
 }

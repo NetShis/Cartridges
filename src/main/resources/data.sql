@@ -19,5 +19,8 @@ VALUES(0, 'now', 0);
 INSERT INTO сartridge_status (id, status)
 VALUES(0, 'Пустой');
 
+INSERT INTO сartridge_status (id, status)
+VALUES(1, 'Брак, полосит');
+
 INSERT INTO list_cartridge_for_consumer (id, date_the_cartridge_was_return, cartridge_id, cartridge_status_id, order_for_consumer_id)
 VALUES(0, null, 1, null, 0);

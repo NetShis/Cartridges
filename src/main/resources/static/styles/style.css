@@ -42,7 +42,9 @@ main {
     color: white;
 }
 
-.replacing-the-cartridge {}
+.replacing-the-cartridge table tr {
+    padding: 10px;
+}
 
 .modal-overlay {
     position: fixed;

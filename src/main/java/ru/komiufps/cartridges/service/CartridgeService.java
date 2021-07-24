@@ -19,12 +19,14 @@ public class CartridgeService {
         cartridgeRepository.save(cartridge);
     }
 
-    public Cartridge getCartridgeBySerialNumber(String serialNumber) {
+    public Cartridge getCartridgeBySerialNumber(String serialNumber) throws Exception {
         Long id = jdbcTemplate.queryForObject(
                 "Select id from Cartridge where serial_number = ?",
                 Long.class, serialNumber);
 
+
         return cartridgeRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Не удалось найти картридж с таким S/N"));
+                () ->  new Exception("Картриджа с таким S/N нет в базе"));
     }
+
 }

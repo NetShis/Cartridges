@@ -2,16 +2,15 @@ package ru.komiufps.cartridges.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.komiufps.cartridges.entity.Cartridge;
 import ru.komiufps.cartridges.entity.СartridgeModel;
 import ru.komiufps.cartridges.entity.СartridgeStatus;
 import ru.komiufps.cartridges.service.CartridgeService;
 import ru.komiufps.cartridges.service.СartridgeModelService;
 import ru.komiufps.cartridges.service.СartridgeStatusService;
+
+import java.util.List;
 
 
 @Controller
@@ -37,6 +36,11 @@ public class CartridgeController {
     @PostMapping("/addStatus")
     public void addСartridgeStatus (@RequestBody СartridgeStatus cartridgeStatus) {
         cartridgeStatusService.addСartridgeStatus(cartridgeStatus);
+    }
+
+    @GetMapping("/getAllStatus")
+    public List<СartridgeStatus> getAllStatus() {
+        return cartridgeStatusService.getAllStatus();
     }
 
 }

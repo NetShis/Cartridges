@@ -1,10 +1,14 @@
 const btn = document.querySelector('#replacing-the-cartridge')
+const order = []
+
+
 
 btn.addEventListener('click', event => {
+
     const modal = document.createElement('div')
     modal.classList.add('modal-replacing-the-cartridge')
     modal.insertAdjacentHTML('afterbegin', `
-    <div id="input" class="modal-overlay">
+    <div class="modal-overlay">
         <div class="modal-window">
             <table>
                 <thead>
@@ -30,39 +34,65 @@ btn.addEventListener('click', event => {
 
     const btnClose = document.querySelector('#destroy-btn')
     const btnNext = document.querySelector('#next-btn')
-    const inputSN = document.querySelector('#input')
 
-    inputSN.onpaste = event => {
+    let allStatus
+    fetch('http://127.0.0.1:8080/cartridge/getAllStatus')
+        .then(response => response.json())
+        .then(data => allStatus = data)
+
+    let serialNumbersReceived = []
+
+    document.onpaste = event => {
         let serialNumber = event.clipboardData.getData('text/plain')
-        const tr = document.createElement('tr')
-        let td = document.createElement('td')
-        td.textContent = serialNumber
-        tr.appendChild(td)
 
-        td = document.createElement('td')
-        td.textContent = 'Status'
-        tr.appendChild(td)
+        if (serialNumbersReceived.includes(serialNumber)){
+            window.alert('S/N ' + serialNumber + ' уже в списке')
+        }
+        else{
+            serialNumbersReceived.push(serialNumber)
+
+            const tr = document.createElement('tr')
+            let td = document.createElement('td')
+            td.textContent = serialNumber
+            tr.appendChild(td)
+
+            fetch('http://127.0.0.1:8080/order/getOrder?serialNumber=' + serialNumber)
+                .then(response => response.json())
+                .then(data =>{
+                    order.push(data)
+
+                    td = document.createElement('td')
+
+                    let status = document.createElement('select')
+                    for (const dataKey of allStatus) {
+                        const option = document.createElement('option')
+                        option.textContent = dataKey['Status']
+                        status.appendChild(option)
+                    }
+
+                    td.appendChild(status)
+                    tr.appendChild(td)
+
+                    td = document.createElement('td')
+                    td.textContent = data['cartridge']['cartridgeModel']['cartridgeModel']
+                    tr.appendChild(td)
+
+                    td = document.createElement('td')
+                    td.textContent = data['orderForConsumer']['consumer']['nameOfConsumer']
+                    tr.appendChild(td)
+
+                    td = document.createElement('td')
+                    td.textContent = data['orderForConsumer']['orderDate']
+                    tr.appendChild(td)
+
+                    document.querySelector('tbody').appendChild(tr)
+                })
+
+        }
 
 
-        fetch('http://127.0.0.1:8080/order/getOrder?serialNumber=' + serialNumber)
-            .then(response => response.json())
-            .then(data =>{
-                td = document.createElement('td')
-                td.textContent = data['cartridge']['cartridgeModel']['cartridgeModel']
-                tr.appendChild(td)
 
-                td = document.createElement('td')
-                td.textContent = data['orderForConsumer']['consumer']['nameOfConsumer']
-                tr.appendChild(td)
-
-                td = document.createElement('td')
-                td.textContent = data['orderForConsumer']['orderDate']
-                tr.appendChild(td)
-
-                document.querySelector('tbody').appendChild(tr)
-            })
-
-
+        console.log(order)
     }
 
 
