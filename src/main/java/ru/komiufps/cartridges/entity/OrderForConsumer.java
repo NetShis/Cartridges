@@ -5,10 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+
 
 @Getter
 @Setter
@@ -23,6 +21,7 @@ public class OrderForConsumer {
     @JsonProperty(value = "consumer")
     private Consumer consumer;
 
+    @JsonProperty(value = "orderDate")
     private LocalDateTime orderDate;
 
     public OrderForConsumer() {

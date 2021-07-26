@@ -23,6 +23,7 @@ public class ListCartridgeForRefueller {
     @JsonProperty(value = "cartridge")
     private Cartridge cartridge;
 
+    @JsonProperty(value = "dateTheCartridgeWasReturn")
     private LocalDateTime dateTheCartridgeWasReturn;
 
     @OneToOne

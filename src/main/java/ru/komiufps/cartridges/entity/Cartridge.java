@@ -1,7 +1,6 @@
 package ru.komiufps.cartridges.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +26,7 @@ public class Cartridge {
     @JsonProperty(value = "isDecommissioned")
     private boolean isDecommissioned;
 
-    //@JsonProperty(value = "registrationDate")
+    @JsonProperty(value = "registrationDate")
     private LocalDate registrationDate;
 
     public Cartridge() {

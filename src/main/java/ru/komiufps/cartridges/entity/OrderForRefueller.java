@@ -20,6 +20,7 @@ public class OrderForRefueller {
     @JsonProperty(value = "refueller")
     private Refueller refueller;
 
+    @JsonProperty(value = "orderDate")
     private LocalDateTime orderDate;
 
     public OrderForRefueller() {

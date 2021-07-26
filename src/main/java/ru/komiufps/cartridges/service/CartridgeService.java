@@ -7,8 +7,6 @@ import ru.komiufps.cartridges.entity.Cartridge;
 import ru.komiufps.cartridges.repository.CartridgeRepository;
 
 
-import java.util.Optional;
-
 @Service
 @AllArgsConstructor
 public class CartridgeService {
@@ -26,7 +24,7 @@ public class CartridgeService {
 
 
         return cartridgeRepository.findById(id).orElseThrow(
-                () ->  new Exception("Картриджа с таким S/N нет в базе"));
-    }
+                () -> new Exception("Картриджа с таким S/N нет в базе"));
 
+    }
 }

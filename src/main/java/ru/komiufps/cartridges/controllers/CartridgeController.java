@@ -24,17 +24,17 @@ public class CartridgeController {
     private final СartridgeStatusService cartridgeStatusService;
 
     @PostMapping("/add")
-    public void addCartridge (@RequestBody Cartridge cartridge) {
+    public void addCartridge(@RequestBody Cartridge cartridge) {
         cartridgeService.addCartridge(cartridge);
     }
 
     @PostMapping("/addModel")
-    public void addСartridgeModel (@RequestBody СartridgeModel cartridgeModel) {
+    public void addСartridgeModel(@RequestBody СartridgeModel cartridgeModel) {
         cartridgeModelService.addСartridgeModel(cartridgeModel);
     }
 
     @PostMapping("/addStatus")
-    public void addСartridgeStatus (@RequestBody СartridgeStatus cartridgeStatus) {
+    public void addСartridgeStatus(@RequestBody СartridgeStatus cartridgeStatus) {
         cartridgeStatusService.addСartridgeStatus(cartridgeStatus);
     }
 

@@ -1,17 +1,16 @@
 package ru.komiufps.cartridges.controllers;
 
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.komiufps.cartridges.entity.Cartridge;
-import ru.komiufps.cartridges.entity.OrderForConsumer;
 import ru.komiufps.cartridges.entity.ListCartridgeForConsumer;
 import ru.komiufps.cartridges.service.CartridgeService;
 import ru.komiufps.cartridges.service.OrderForConsumerService;
 import ru.komiufps.cartridges.service.ListCartridgeForConsumerService;
 
-import java.util.Optional;
 
 @Controller
 @RestController
@@ -19,7 +18,6 @@ import java.util.Optional;
 @RequestMapping("/order")
 public class OrderController {
 
-    private final OrderForConsumerService orderForConsumerService;
     private final CartridgeService cartridgeService;
     private final ListCartridgeForConsumerService listCartridgeForConsumerService;
 
@@ -33,10 +31,11 @@ public class OrderController {
         Cartridge cartridge = null;
         try {
             cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
-        } catch (Exception e) {
-            e.printStackTrace();
+            return listCartridgeForConsumerService.getOrderForCartridge(cartridge);
+        } catch (Exception exc) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Foo Not Found");
         }
-        return listCartridgeForConsumerService.getOrderForCartridge(cartridge);
     }
 
 
