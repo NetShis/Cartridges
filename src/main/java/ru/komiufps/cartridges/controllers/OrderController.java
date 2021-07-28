@@ -8,7 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.komiufps.cartridges.entity.Cartridge;
 import ru.komiufps.cartridges.entity.ListCartridgeForConsumer;
 import ru.komiufps.cartridges.service.CartridgeService;
-import ru.komiufps.cartridges.service.OrderForConsumerService;
 import ru.komiufps.cartridges.service.ListCartridgeForConsumerService;
 
 
@@ -28,15 +27,17 @@ public class OrderController {
 
     @GetMapping("/getOrder")
     public ListCartridgeForConsumer getOrder(@RequestParam(value = "serialNumber") String serialNumber) {
-        Cartridge cartridge = null;
-        try {
-            cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
-            return listCartridgeForConsumerService.getOrderForCartridge(cartridge);
-        } catch (Exception exc) {
+        Cartridge cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
+        if (cartridge == null)
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Foo Not Found");
+                    HttpStatus.NOT_FOUND, "Картриджа с S/N: " + serialNumber + " нет в базе");
+
+        else {
+            ListCartridgeForConsumer listCartridgeForConsumer = listCartridgeForConsumerService.getOrderForCartridge(cartridge);
+            if (listCartridgeForConsumer == null)
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Картридж S/N: " + serialNumber + " не числится выданным");
+            else return listCartridgeForConsumer;
         }
     }
-
-
 }

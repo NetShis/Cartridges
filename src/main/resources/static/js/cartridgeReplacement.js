@@ -1,7 +1,8 @@
 const btn = document.querySelector('#replacing-the-cartridge')
-let order = []
+
 
 btn.addEventListener('click', event => {
+    let order = []
 
     const modal = document.createElement('div')
     modal.classList.add('modal-replacing-the-cartridge')
@@ -38,9 +39,10 @@ btn.addEventListener('click', event => {
         .then(response => response.json())
         .then(data => allStatus = data)
 
-    let serialNumbersReceived = []
+
 
     document.onpaste = event => {
+        let serialNumbersReceived = []
         let serialNumber = event.clipboardData.getData('text/plain')
 
         if (serialNumbersReceived.includes(serialNumber)) {
@@ -133,11 +135,9 @@ btn.addEventListener('click', event => {
         document.body.appendChild(modal)
 
         for (let orderElement of order) {
-            console.log(orderElement)
             const tr = document.createElement('tr')
             let td = document.createElement('td')
 
-            td.textContent = 'vvvvv'
             tr.appendChild(td)
 
             td = document.createElement('td')
@@ -145,13 +145,35 @@ btn.addEventListener('click', event => {
             tr.appendChild(td)
 
             td = document.createElement('td')
-            td.textContent = 'vvvvv'
             tr.appendChild(td)
 
             td = document.createElement('td')
-            td.textContent = orderElement['orderForConsumer']['nameOfConsumer']
+            td.textContent = orderElement['orderForConsumer']['consumer']['nameOfConsumer']
             tr.appendChild(td)
             document.querySelector('tbody').appendChild(tr)
         }
+
+        document.onpaste = event => {
+            let serialNumbersReceived = []
+            let serialNumber = event.clipboardData.getData('text/plain')
+
+            if (serialNumbersReceived.includes(serialNumber)) {
+                window.alert('S/N ' + serialNumber + ' уже в списке')
+            } else {
+                fetch('http://127.0.0.1:8080/cartridge/getCartrigeBySerialNumber?serialNumber=' + serialNumber)
+                    .then(response=>{
+                        if(response.ok)
+                            response.json().then(data=>{
+
+
+                                serialNumbersReceived.push(serialNumber)
+                            })
+                        else
+                            response.json().then(data => window.alert(data['message']))
+                    })
+
+            }
+        }
+
     })
 })
