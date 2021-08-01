@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class ListCartridgeForConsumer {
+public class CartridgeForOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

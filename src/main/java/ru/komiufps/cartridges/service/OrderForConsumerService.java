@@ -14,4 +14,8 @@ public class OrderForConsumerService {
     public void addOrderForConsumer (OrderForConsumer orderForConsumer) {
         orderForConsumerRepository.save(orderForConsumer);
     }
+
+    public void saveOrder (OrderForConsumer orderForConsumer) {
+        orderForConsumerRepository.save(orderForConsumer);
+    }
 }

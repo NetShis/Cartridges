@@ -42,8 +42,12 @@ main {
     color: white;
 }
 
-.replacing-the-cartridge table tr {
-    padding: 10px;
+table th {
+    padding: 7px;
+}
+
+table td {
+    padding: 7px;
 }
 
 .modal-overlay {

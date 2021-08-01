@@ -3,12 +3,16 @@ const btn = document.querySelector('#replacing-the-cartridge')
 
 btn.addEventListener('click', event => {
     let order = []
+    let consumer
+    let replacementCartridges = []
+    let serialNumbersReceived = []
 
-    const modal = document.createElement('div')
-    modal.classList.add('modal-replacing-the-cartridge')
-    modal.insertAdjacentHTML('afterbegin', `
+    const modalOne = document.createElement('div')
+    modalOne.classList.add('modal-replacing-the-cartridge')
+    modalOne.insertAdjacentHTML('afterbegin', `
     <div class="modal-overlay">
         <div class="modal-window">
+        <h3>Сканируйте серийный номер картриджа</h3>
             <table>
                 <thead>
                     <tr>
@@ -29,10 +33,17 @@ btn.addEventListener('click', event => {
         </div>
     </div>
 `)
-    document.body.appendChild(modal)
+    document.body.appendChild(modalOne)
 
-    const btnClose = document.querySelector('#destroy-btn')
+    const btnCloseOne = document.querySelector('#destroy-btn')
+
+    btnCloseOne.addEventListener('click', event => {
+        modalOne.parentNode.removeChild(modalOne)
+        btnCloseOne.removeEventListener('click', this)
+    })
+
     const btnNext = document.querySelector('#next-btn')
+    btnNext.setAttribute('disabled', 'true')
 
     let allStatus
     fetch('http://127.0.0.1:8080/cartridge/getAllStatus')
@@ -40,9 +51,7 @@ btn.addEventListener('click', event => {
         .then(data => allStatus = data)
 
 
-
     document.onpaste = event => {
-        let serialNumbersReceived = []
         let serialNumber = event.clipboardData.getData('text/plain')
 
         if (serialNumbersReceived.includes(serialNumber)) {
@@ -58,35 +67,46 @@ btn.addEventListener('click', event => {
                 .then(response => {
                     if (response.ok)
                         response.json().then(data => {
-                            td = document.createElement('td')
+                            if (typeof consumer === 'undefined')
+                                consumer = data['orderForConsumer']['consumer']['id']
 
-                            let status = document.createElement('select')
-                            status.setAttribute('id', data['id'])
-                            for (const dataKey of allStatus) {
-                                const option = document.createElement('option')
-                                option.textContent = dataKey['Status']
-                                option.setAttribute('value', dataKey['id'])
-                                status.appendChild(option)
+                            if (consumer !== data['orderForConsumer']['consumer']['id'])
+                                window.alert('Картридж S/N '
+                                    + serialNumber + 'не выдавался'
+                                    + data['orderForConsumer']['consumer']['nameOfConsumer'] + ' потребителю')
+
+                            else {
+                                td = document.createElement('td')
+
+                                let status = document.createElement('select')
+                                status.setAttribute('id', data['id'])
+                                for (const dataKey of allStatus) {
+                                    const option = document.createElement('option')
+                                    option.textContent = dataKey['Status']
+                                    option.setAttribute('value', dataKey['id'])
+                                    status.appendChild(option)
+                                }
+
+                                td.appendChild(status)
+                                tr.appendChild(td)
+
+                                td = document.createElement('td')
+                                td.textContent = data['cartridge']['cartridgeModel']['cartridgeModel']
+                                tr.appendChild(td)
+
+                                td = document.createElement('td')
+                                td.textContent = data['orderForConsumer']['consumer']['nameOfConsumer']
+                                tr.appendChild(td)
+
+                                td = document.createElement('td')
+                                td.textContent = data['orderForConsumer']['orderDate']
+                                tr.appendChild(td)
+
+                                document.querySelector('tbody').appendChild(tr)
+                                serialNumbersReceived.push(serialNumber)
+                                order.push(data)
+                                btnNext.removeAttribute('disabled')
                             }
-
-                            td.appendChild(status)
-                            tr.appendChild(td)
-
-                            td = document.createElement('td')
-                            td.textContent = data['cartridge']['cartridgeModel']['cartridgeModel']
-                            tr.appendChild(td)
-
-                            td = document.createElement('td')
-                            td.textContent = data['orderForConsumer']['consumer']['nameOfConsumer']
-                            tr.appendChild(td)
-
-                            td = document.createElement('td')
-                            td.textContent = data['orderForConsumer']['orderDate']
-                            tr.appendChild(td)
-
-                            document.querySelector('tbody').appendChild(tr)
-                            serialNumbersReceived.push(serialNumber)
-                            order.push(data)
                         })
 
                     else
@@ -95,24 +115,21 @@ btn.addEventListener('click', event => {
         }
     }
 
-
-    const listenerbtnClose = event => {
-        modal.parentNode.removeChild(modal)
-        btnClose.removeEventListener('click', listenerbtnClose)
-    }
-
-    btnClose.addEventListener('click', listenerbtnClose)
     btnNext.addEventListener('click', event => {
         for (let orderElement of order)
-            orderElement['cartridgeStatus'] = Number.parseInt(document.getElementById(orderElement['id']).value)
+            orderElement['cartridgeStatus'] = {
+                id: Number.parseInt(document.getElementById(orderElement['id']).value)
+            }
 
-        listenerbtnClose()
+        modalOne.parentNode.removeChild(modalOne)
+        btnCloseOne.removeEventListener('click', this)
 
-        const modal = document.createElement('div')
-        modal.classList.add('modal-replacing-the-cartridge')
-        modal.insertAdjacentHTML('afterbegin', `
+        const modalTwo = document.createElement('div')
+        modalTwo.classList.add('modal-replacing-the-cartridge')
+        modalTwo.insertAdjacentHTML('afterbegin', `
         <div class="modal-overlay">
             <div class="modal-window">
+            <h3>Сканируйте серийный номер картриджа</h3>
                 <table>
                     <thead>
                         <tr>
@@ -126,18 +143,52 @@ btn.addEventListener('click', event => {
                     </tbody>
                 </table>
                 <div class="footer">
-                <button id="next-btn" class="ok-next">Далее</button>
+                <button id="confirm-btn" class="ok-next">Подтвердить замену</button>
                 <button id="destroy-btn" class="destroy">Отмена</button>
                 </div>
             </div>
         </div>
         `)
-        document.body.appendChild(modal)
+        document.body.appendChild(modalTwo)
+        const btnConfirm = document.querySelector('#confirm-btn')
+        const btnCloseTwo = document.querySelector('#destroy-btn')
+
+        btnCloseTwo.addEventListener('click', event => {
+            modalTwo.parentNode.removeChild(modalTwo)
+            btnCloseTwo.removeEventListener('click', this)
+        })
+
+        btnConfirm.addEventListener('click', event => {
+            modalTwo.parentNode.removeChild(modalTwo)
+            btnCloseTwo.removeEventListener('click', this)
+
+            fetch('http://127.0.0.1:8080/order/closeOrders', {
+                method: 'PUT',
+                body: JSON.stringify(order),
+                headers: {'Content-Type': 'application/json'}
+            }).then(response => {
+                if (response.ok) {
+                    const consumerReplacementCartridgesList = {
+                        consumer: order[0]['orderForConsumer']['consumer'],
+                        cartridges: replacementCartridges
+                    }
+
+                    fetch('http://127.0.0.1:8080/order/createOrder', {
+                        method: 'POST',
+                        body: JSON.stringify(consumerReplacementCartridgesList),
+                        headers: {'Content-Type': 'application/json'}
+                    }).then(response => response.json())
+                        .then(data => window.alert(data['message']))
+                }
+            })
+        })
 
         for (let orderElement of order) {
             const tr = document.createElement('tr')
             let td = document.createElement('td')
 
+
+            td.setAttribute('id', orderElement['cartridge']['cartridgeModel']['cartridgeModel'])
             tr.appendChild(td)
 
             td = document.createElement('td')
@@ -145,6 +196,7 @@ btn.addEventListener('click', event => {
             tr.appendChild(td)
 
             td = document.createElement('td')
+            td.setAttribute('id', 'serialNumber')
             tr.appendChild(td)
 
             td = document.createElement('td')
@@ -154,26 +206,48 @@ btn.addEventListener('click', event => {
         }
 
         document.onpaste = event => {
-            let serialNumbersReceived = []
             let serialNumber = event.clipboardData.getData('text/plain')
 
             if (serialNumbersReceived.includes(serialNumber)) {
                 window.alert('S/N ' + serialNumber + ' уже в списке')
             } else {
                 fetch('http://127.0.0.1:8080/cartridge/getCartrigeBySerialNumber?serialNumber=' + serialNumber)
-                    .then(response=>{
-                        if(response.ok)
-                            response.json().then(data=>{
+                    .then(response => {
+                        if (response.ok)
+                            response.json().then(data => {
+                                let change = document.getElementById(data['cartridgeModel']['cartridgeModel'])
 
+                                if (change == null) {
+                                    const tr = document.createElement('tr')
+                                    let td = document.createElement('td')
 
+                                    tr.appendChild(td)
+
+                                    td = document.createElement('td')
+                                    td.textContent = data['cartridgeModel']['cartridgeModel']
+                                    tr.appendChild(td)
+
+                                    td = document.createElement('td')
+                                    td.textContent = data['serialNumber']
+                                    tr.appendChild(td)
+
+                                    td = document.createElement('td')
+                                    td.textContent = order[0]['orderForConsumer']['consumer']['nameOfConsumer']
+                                    tr.appendChild(td)
+                                    document.querySelector('tbody').appendChild(tr)
+                                } else {
+                                    change.textContent = '✅'
+                                    let serialNumberElement = change.parentElement.querySelector('#serialNumber')
+                                    serialNumberElement.textContent = data['serialNumber']
+                                    change.removeAttribute('id')
+                                }
+                                replacementCartridges.push(data)
                                 serialNumbersReceived.push(serialNumber)
                             })
                         else
                             response.json().then(data => window.alert(data['message']))
                     })
-
             }
         }
-
     })
 })
