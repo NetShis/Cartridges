@@ -1,23 +1,26 @@
 INSERT INTO сartridge_model (id, cartridge_model, required_limit_in_stock)
 VALUES(0, '78', 10);
 
-INSERT INTO cartridge (id, is_decommissioned, registration_date, serial_number, cartridge_model_id)
-VALUES(0, false, '2021-07-14', '78_0', 0);
+INSERT INTO cartridge (id, deregistration_date, registration_date, serial_number, cartridge_model_id)
+VALUES(0, null, '2021-07-14', '78_0', 0);
 
-INSERT INTO cartridge (id, is_decommissioned, registration_date, serial_number, cartridge_model_id)
-VALUES(1, false, '2021-07-15', '78_1', 0);
+INSERT INTO cartridge (id, deregistration_date, registration_date, serial_number, cartridge_model_id)
+VALUES(1, null, '2021-07-15', '78_1', 0);
 
 INSERT INTO сartridge_model (id, cartridge_model, required_limit_in_stock)
 VALUES(1, '12', 10);
 
-INSERT INTO cartridge (id, is_decommissioned, registration_date, serial_number, cartridge_model_id)
-VALUES(3, false, '2021-07-15', '12_3', 1);
+INSERT INTO cartridge (id, deregistration_date, registration_date, serial_number, cartridge_model_id)
+VALUES(3, null, '2021-07-15', '12_3', 1);
 
-INSERT INTO cartridge (id, is_decommissioned, registration_date, serial_number, cartridge_model_id)
-VALUES(4, false, '2021-07-16', '12_4', 1);
+INSERT INTO cartridge (id, deregistration_date, registration_date, serial_number, cartridge_model_id)
+VALUES(4, null, '2021-07-16', '12_4', 1);
 
 INSERT INTO consumer (id, name_of_consumer)
 VALUES(0, '207_кабинет');
+
+INSERT INTO consumer (id, name_of_consumer)
+VALUES(1, '103_кабинет');
 
 INSERT INTO order_for_consumer (id, order_date, consumer_id)
 VALUES(0, 'now', 0);

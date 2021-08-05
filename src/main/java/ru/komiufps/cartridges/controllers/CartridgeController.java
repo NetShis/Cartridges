@@ -8,9 +8,13 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.komiufps.cartridges.entity.Cartridge;
 import ru.komiufps.cartridges.entity.СartridgeModel;
 import ru.komiufps.cartridges.entity.СartridgeStatus;
+import ru.komiufps.cartridges.service.CartridgeForOrderService;
 import ru.komiufps.cartridges.service.CartridgeService;
 import ru.komiufps.cartridges.service.СartridgeModelService;
 import ru.komiufps.cartridges.service.СartridgeStatusService;
+import ru.komiufps.cartridges.utils.BaseResponse;
+import ru.komiufps.cartridges.utils.CartridgeChecker;
+import ru.komiufps.cartridges.utils.CheckerException;
 
 import java.util.List;
 
@@ -24,10 +28,12 @@ public class CartridgeController {
     private final CartridgeService cartridgeService;
     private final СartridgeModelService cartridgeModelService;
     private final СartridgeStatusService cartridgeStatusService;
+    private final CartridgeForOrderService cartridgeForOrderService;
+    private final CartridgeChecker cartridgeChecker;
 
     @PostMapping("/add")
-    public void addCartridge(@RequestBody Cartridge cartridge) {
-        cartridgeService.addCartridge(cartridge);
+    public void addCartridge(@RequestBody String cartridgeList) {
+        System.out.println(cartridgeList);
     }
 
     @PostMapping("/addModel")
@@ -46,12 +52,29 @@ public class CartridgeController {
     }
 
     @GetMapping("/getCartrigeBySerialNumber")
-    public Cartridge getCartrigeBySerialNumber(@RequestParam(value = "serialNumber") String serialNumber) {
+    public Cartridge getCartrigeBySerialNumber(@RequestParam(value = "operation") String operation,
+                                               @RequestParam(value = "serialNumber") String serialNumber) {
+
         Cartridge cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
-        if (cartridge == null)
+
+        try {
+            cartridgeChecker.check(cartridge, operation);
+        } catch (CheckerException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Картриджа с S/N: " + serialNumber + " нет в базе");
-        else
-            return cartridge;
+                    HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
+        return cartridge;
     }
+
+
+    @PutMapping("/deregister")
+    public BaseResponse deregisterCartridge(@RequestBody List<Cartridge> cartridgeList) {
+        cartridgeService.deregisterCartridge(cartridgeList);
+
+        return BaseResponse.builder()
+                .message("Картриджы успешно выведены из эксплуатации.")
+                .build();
+    }
+
 }

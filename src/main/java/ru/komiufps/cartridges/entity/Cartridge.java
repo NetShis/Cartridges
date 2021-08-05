@@ -3,6 +3,7 @@ package ru.komiufps.cartridges.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@ToString
 @Entity
 public class Cartridge {
     @Id
@@ -20,17 +22,18 @@ public class Cartridge {
     @JsonProperty(value = "cartridgeModel")
     private СartridgeModel cartridgeModel;
 
+    @Column(unique = true)
     @JsonProperty(value = "serialNumber")
     private String serialNumber;
-
-    @JsonProperty(value = "isDecommissioned")
-    private boolean isDecommissioned;
 
     @JsonProperty(value = "registrationDate")
     private LocalDate registrationDate;
 
+    @JsonProperty(value = "deregistrationDate")
+    private LocalDate deregistrationDate;
+
     public Cartridge() {
-        this.isDecommissioned = false;
         this.registrationDate = LocalDate.now();
     }
+
 }

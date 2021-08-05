@@ -9,6 +9,7 @@ import ru.komiufps.cartridges.repository.CartridgeForOrderRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public class CartridgeForOrderService {
         });
     }
 
-    public CartridgeForOrder getOrderForCartridge(Cartridge cartridge) {
+    public Optional<CartridgeForOrder> getOrderForCartridge(Cartridge cartridge) {
         return cartridgeForOrderRepository.findOrderForCartridge(cartridge);
     }
 

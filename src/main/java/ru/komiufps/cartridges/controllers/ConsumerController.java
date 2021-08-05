@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.komiufps.cartridges.entity.Consumer;
 import ru.komiufps.cartridges.service.ConsumerService;
 
+import java.util.List;
+
 @Controller
 @RestController
 @RequiredArgsConstructor
@@ -19,5 +21,9 @@ public class ConsumerController {
         consumerService.addConsumer(consumer);
     }
 
+    @GetMapping("/getAllConsumers")
+    public List<Consumer> getAllConsumers() {
+        return consumerService.getAllConsumers();
+    }
 
 }

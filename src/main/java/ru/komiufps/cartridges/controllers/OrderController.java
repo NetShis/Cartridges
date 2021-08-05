@@ -8,10 +8,12 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.komiufps.cartridges.entity.Cartridge;
 import ru.komiufps.cartridges.entity.CartridgeForOrder;
 import ru.komiufps.cartridges.entity.OrderForConsumer;
-import ru.komiufps.cartridges.service.CartridgeService;
 import ru.komiufps.cartridges.service.CartridgeForOrderService;
+import ru.komiufps.cartridges.service.CartridgeService;
 import ru.komiufps.cartridges.service.OrderForConsumerService;
 import ru.komiufps.cartridges.utils.BaseResponse;
+import ru.komiufps.cartridges.utils.CartridgeChecker;
+import ru.komiufps.cartridges.utils.CheckerException;
 import ru.komiufps.cartridges.utils.ConsumerReplacementCartridgesList;
 
 import java.util.ArrayList;
@@ -27,10 +29,16 @@ public class OrderController {
     private final CartridgeService cartridgeService;
     private final CartridgeForOrderService cartridgeForOrderService;
     private final OrderForConsumerService orderForConsumerService;
+    private final CartridgeChecker cartridgeChecker;
 
     @PutMapping("/closeOrders")
-    public void closeAnOrders(@RequestBody List<CartridgeForOrder> cartridgesForOrder) {
+    public BaseResponse closeOrders(@RequestBody List<CartridgeForOrder> cartridgesForOrder) {
         cartridgeForOrderService.closeOrders(cartridgesForOrder);
+
+        return BaseResponse
+                .builder()
+                .message("Заказ успешно закрыт.")
+                .build();
     }
 
     @PostMapping("/createOrder")
@@ -39,38 +47,45 @@ public class OrderController {
         orderForConsumer.setConsumer(consumerReplacementCartridgesList.getConsumer());
 
         List<Cartridge> cartridgeList = consumerReplacementCartridgesList.getCartridges();
-        List<CartridgeForOrder> cartridgesForOrder = new ArrayList<>();
 
-        cartridgeList.forEach(cartridge -> {
-            CartridgeForOrder cartridgeForOrder = new CartridgeForOrder();
-            cartridgeForOrder.setOrderForConsumer(orderForConsumer);
-            cartridgeForOrder.setCartridge(cartridge);
-            cartridgesForOrder.add(cartridgeForOrder);
-        });
+        if (cartridgeList.size() != 0) {
+            List<CartridgeForOrder> cartridgesForOrder = new ArrayList<>();
 
-        orderForConsumerService.saveOrder(orderForConsumer);
-        cartridgeForOrderService.createOrder(cartridgesForOrder);
+            cartridgeList.forEach(cartridge -> {
+                CartridgeForOrder cartridgeForOrder = new CartridgeForOrder();
+                cartridgeForOrder.setOrderForConsumer(orderForConsumer);
+                cartridgeForOrder.setCartridge(cartridge);
+                cartridgesForOrder.add(cartridgeForOrder);
+            });
 
-        return BaseResponse.builder()
-                .message("Заказ успешно обработан")
-                .build();
+            orderForConsumerService.saveOrder(orderForConsumer);
+            cartridgeForOrderService.createOrder(cartridgesForOrder);
+
+            return BaseResponse
+                    .builder()
+                    .message("Заказ успешно создан.")
+                    .build();
+        } else {
+            return BaseResponse
+                    .builder()
+                    .message("Картриджы не выбраны, новый заказ для пользователя не сформирован.")
+                    .build();
+        }
     }
 
     @GetMapping("/getOrder")
     public CartridgeForOrder getOrder(@RequestParam(value = "serialNumber") String serialNumber) {
         Cartridge cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
-        if (cartridge == null)
+        try {
+            cartridgeChecker.check(cartridge, "takeCartridge");
+        } catch (CheckerException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Картриджа с S/N: " + serialNumber + " нет в базе");
-
-        else {
-            CartridgeForOrder cartridgeForOrder = cartridgeForOrderService
-                    .getOrderForCartridge(cartridge);
-
-            if (cartridgeForOrder == null)
-                throw new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Картридж S/N: " + serialNumber + " не числится выданным");
-            else return cartridgeForOrder;
+                    HttpStatus.NOT_FOUND, e.getMessage());
         }
+
+        return cartridgeForOrderService
+                .getOrderForCartridge(cartridge)
+                .get();
+
     }
 }

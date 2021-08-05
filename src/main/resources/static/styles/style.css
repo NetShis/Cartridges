@@ -13,9 +13,11 @@ header {
 }
 
 header > h1 {
-    margin: 0;
-    margin-left: 50px;
+    margin: 0 0 0 50px;
+}
 
+h3 {
+    margin: 5px;
 }
 
 main {
@@ -42,11 +44,15 @@ main {
     color: white;
 }
 
-table th {
+.modal-window table {
+    border-collapse: collapse
+}
+
+.modal-window table th {
     padding: 7px;
 }
 
-table td {
+.modal-window table td {
     padding: 7px;
 }
 
@@ -66,18 +72,6 @@ table td {
     margin: 100px auto;
     background: #F5F5F5;
     border-radius: 8px;
-}
-
-
-.modal-window textarea {
-    margin: 12px;
-    height: 220px;
-    width: 557px;
-    background-color: white;
-    border-radius: 8px;
-    color: black;
-    border: 2px solid rgb(25, 55, 255);
-    overflow: hidden;
 }
 
 .modal-window .footer {
