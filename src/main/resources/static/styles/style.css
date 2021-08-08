@@ -5,10 +5,11 @@ body {
 
 header {
     display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-.wrapper-logo svg {
-    color: rgb(25, 55, 255);
+.wrapper-logo img{
     width: 150px;
 }
 
