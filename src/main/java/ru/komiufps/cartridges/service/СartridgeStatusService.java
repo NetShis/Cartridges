@@ -12,6 +12,7 @@ import java.util.List;
 public class СartridgeStatusService {
     private final СartridgeStatusRepository cartridgeStatusRepository;
 
+
     public void addСartridgeStatus (СartridgeStatus cartridgeStatus) {
         cartridgeStatusRepository.save(cartridgeStatus);
     }

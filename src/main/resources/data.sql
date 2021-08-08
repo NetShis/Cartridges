@@ -1,38 +1,40 @@
-INSERT INTO сartridge_model (id, cartridge_model, required_limit_in_stock)
-VALUES(0, '78', 10);
+INSERT INTO cartridge_model (cartridge_model, required_limit_in_stock)
+VALUES ('78', 10);
 
-INSERT INTO cartridge (id, deregistration_date, registration_date, serial_number, cartridge_model_id)
-VALUES(0, null, '2021-07-14', '78_0', 0);
+INSERT INTO cartridge (deregistration_date, registration_date, serial_number, cartridge_model_id)
+VALUES (null, '2021-07-14', '78_1', 1);
 
-INSERT INTO cartridge (id, deregistration_date, registration_date, serial_number, cartridge_model_id)
-VALUES(1, null, '2021-07-15', '78_1', 0);
+INSERT INTO cartridge (deregistration_date, registration_date, serial_number, cartridge_model_id)
+VALUES (null, '2021-07-15', '78_2', 1);
 
-INSERT INTO сartridge_model (id, cartridge_model, required_limit_in_stock)
-VALUES(1, '12', 10);
+INSERT INTO cartridge_model (cartridge_model, required_limit_in_stock)
+VALUES ('12', 10);
 
-INSERT INTO cartridge (id, deregistration_date, registration_date, serial_number, cartridge_model_id)
-VALUES(3, null, '2021-07-15', '12_3', 1);
+INSERT INTO cartridge (deregistration_date, registration_date, serial_number, cartridge_model_id)
+VALUES (null, '2021-07-15', '12_3', 2);
 
-INSERT INTO cartridge (id, deregistration_date, registration_date, serial_number, cartridge_model_id)
-VALUES(4, null, '2021-07-16', '12_4', 1);
+INSERT INTO cartridge (deregistration_date, registration_date, serial_number, cartridge_model_id)
+VALUES (null, '2021-07-16', '12_4', 2);
 
-INSERT INTO consumer (id, name_of_consumer)
-VALUES(0, '207_кабинет');
+INSERT INTO consumer (name_of_consumer)
+VALUES ('207_кабинет');
 
-INSERT INTO consumer (id, name_of_consumer)
-VALUES(1, '103_кабинет');
+INSERT INTO consumer (name_of_consumer)
+VALUES ('103_кабинет');
 
-INSERT INTO order_for_consumer (id, order_date, consumer_id)
-VALUES(0, 'now', 0);
+INSERT INTO order_for_consumer (order_date, consumer_id)
+VALUES ('now', 1);
 
-INSERT INTO сartridge_status (id, status)
-VALUES(0, 'Пустой');
+INSERT INTO сartridge_status (status)
+VALUES ('Пустой');
 
-INSERT INTO сartridge_status (id, status)
-VALUES(1, 'Брак, полосит');
+INSERT INTO сartridge_status (status)
+VALUES ('Брак, полосит');
 
-INSERT INTO cartridge_for_order (id, date_the_cartridge_was_return, cartridge_id, cartridge_status_id, order_for_consumer_id)
-VALUES(0, null, 1, null, 0);
+INSERT INTO cartridge_for_order (date_the_cartridge_was_return, cartridge_id, cartridge_status_id,
+                                 order_for_consumer_id)
+VALUES (null, 1, null, 1);
 
-INSERT INTO cartridge_for_order (id, date_the_cartridge_was_return, cartridge_id, cartridge_status_id, order_for_consumer_id)
-VALUES(1, null, 3, null, 0);
+INSERT INTO cartridge_for_order (date_the_cartridge_was_return, cartridge_id, cartridge_status_id,
+                                 order_for_consumer_id)
+VALUES (null, 3, null, 1);

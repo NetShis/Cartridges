@@ -11,9 +11,9 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Entity
-public class СartridgeModel {
+public class CartridgeModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonProperty(value = "requiredLimitInStock")

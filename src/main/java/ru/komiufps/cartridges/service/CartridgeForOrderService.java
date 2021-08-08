@@ -27,8 +27,8 @@ public class CartridgeForOrderService {
         return cartridgeForOrderRepository.findOrderForCartridge(cartridge);
     }
 
-    public void createOrder (List <CartridgeForOrder> cartridgesForOrder ) {
-        cartridgeForOrderRepository.saveAll(cartridgesForOrder);
+    public void save(CartridgeForOrder cartridgeForOrder) {
+        cartridgeForOrderRepository.save(cartridgeForOrder);
     }
 
 }

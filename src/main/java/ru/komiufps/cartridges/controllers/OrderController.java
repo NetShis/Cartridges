@@ -16,7 +16,6 @@ import ru.komiufps.cartridges.utils.CartridgeChecker;
 import ru.komiufps.cartridges.utils.CheckerException;
 import ru.komiufps.cartridges.utils.ConsumerReplacementCartridgesList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,31 +45,22 @@ public class OrderController {
         OrderForConsumer orderForConsumer = new OrderForConsumer();
         orderForConsumer.setConsumer(consumerReplacementCartridgesList.getConsumer());
 
-        List<Cartridge> cartridgeList = consumerReplacementCartridgesList.getCartridges();
+        orderForConsumerService.save(orderForConsumer);
 
-        if (cartridgeList.size() != 0) {
-            List<CartridgeForOrder> cartridgesForOrder = new ArrayList<>();
+        consumerReplacementCartridgesList.getCartridges()
+                .forEach(cartridge -> {
+                    CartridgeForOrder cartridgeForOrder = new CartridgeForOrder();
+                    cartridgeForOrder.setOrderForConsumer(orderForConsumer);
+                    cartridgeForOrder.setCartridge(cartridge);
+                    cartridgeForOrderService.save(cartridgeForOrder);
+                });
 
-            cartridgeList.forEach(cartridge -> {
-                CartridgeForOrder cartridgeForOrder = new CartridgeForOrder();
-                cartridgeForOrder.setOrderForConsumer(orderForConsumer);
-                cartridgeForOrder.setCartridge(cartridge);
-                cartridgesForOrder.add(cartridgeForOrder);
-            });
 
-            orderForConsumerService.saveOrder(orderForConsumer);
-            cartridgeForOrderService.createOrder(cartridgesForOrder);
+        return BaseResponse
+                .builder()
+                .message("Заказ успешно создан.")
+                .build();
 
-            return BaseResponse
-                    .builder()
-                    .message("Заказ успешно создан.")
-                    .build();
-        } else {
-            return BaseResponse
-                    .builder()
-                    .message("Картриджы не выбраны, новый заказ для пользователя не сформирован.")
-                    .build();
-        }
     }
 
     @GetMapping("/getOrder")

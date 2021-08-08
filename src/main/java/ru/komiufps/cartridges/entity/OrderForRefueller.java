@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 public class OrderForRefueller {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne

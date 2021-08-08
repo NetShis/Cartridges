@@ -16,10 +16,6 @@ import java.util.List;
 public class CartridgeService {
     private final CartridgeRepository cartridgeRepository;
 
-    public void addCartridge(Cartridge cartridge) {
-        cartridgeRepository.save(cartridge);
-    }
-
     public Cartridge getCartridgeBySerialNumber(String serialNumber) {
         return cartridgeRepository
                 .findCartridgeSerialNumber(serialNumber)
@@ -33,4 +29,9 @@ public class CartridgeService {
             cartridgeRepository.save(cartridge);
         });
     }
+
+    public void save(Cartridge cartridge) {
+        cartridgeRepository.save(cartridge);
+    }
+
 }

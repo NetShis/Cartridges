@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
+
 @Getter
 @Setter
 @ToString
@@ -16,10 +17,10 @@ import java.time.LocalDateTime;
 public class OrderForConsumer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JsonProperty(value = "consumer")
     private Consumer consumer;
 

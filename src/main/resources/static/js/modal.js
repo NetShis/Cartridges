@@ -31,6 +31,24 @@ $.modal = function (options) {
         return select
     }
 
+    function _getAllModelCartridge() {
+        const select = document.createElement('select')
+        select.setAttribute('class', 'list')
+        select.setAttribute('id', 'model-list-select')
+
+        _request('GET', '/cartridge/getAllModels', data => {
+            data.forEach(model => {
+                const option = document.createElement('option')
+                option.textContent = model['cartridgeModel']
+                option.setAttribute('value', model['id'])
+                select.appendChild(option)
+            })
+        })
+
+        return select
+
+    }
+
 
     const returnModal = {
         myModal: '',
@@ -65,6 +83,12 @@ $.modal = function (options) {
             if (consumerList !== null)
                 consumerList.appendChild(_getAllConsumers())
 
+            const chooseModelCartridge = document.querySelector('#choose-model-cartridge')
+            if (chooseModelCartridge !== null) {
+                chooseModelCartridge.appendChild(_getAllModelCartridge())
+            }
+
+
             const cartridgeListForReplacement = document.querySelector('#cartridge-list-for-replacement')
             if (cartridgeListForReplacement !== null) {
                 document.querySelector('#consumer-name').textContent
@@ -89,6 +113,7 @@ $.modal = function (options) {
                     cartridgeListForReplacement.appendChild(tr)
                 }
             }
+
 
             document.onpaste = event => {
                 let serialNumber = event.clipboardData.getData('text/plain')

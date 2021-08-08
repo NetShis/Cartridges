@@ -11,11 +11,7 @@ import ru.komiufps.cartridges.repository.OrderForConsumerRepository;
 public class OrderForConsumerService {
     private final OrderForConsumerRepository orderForConsumerRepository;
 
-    public void addOrderForConsumer (OrderForConsumer orderForConsumer) {
-        orderForConsumerRepository.save(orderForConsumer);
-    }
-
-    public void saveOrder (OrderForConsumer orderForConsumer) {
+    public void save(OrderForConsumer orderForConsumer) {
         orderForConsumerRepository.save(orderForConsumer);
     }
 }

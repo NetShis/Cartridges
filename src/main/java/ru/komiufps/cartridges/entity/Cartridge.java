@@ -15,12 +15,12 @@ import java.time.LocalDate;
 @Entity
 public class Cartridge {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne()
     @JsonProperty(value = "cartridgeModel")
-    private СartridgeModel cartridgeModel;
+    private CartridgeModel cartridgeModel;
 
     @Column(unique = true)
     @JsonProperty(value = "serialNumber")

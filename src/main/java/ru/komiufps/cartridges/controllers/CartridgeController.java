@@ -6,15 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.komiufps.cartridges.entity.Cartridge;
-import ru.komiufps.cartridges.entity.СartridgeModel;
+import ru.komiufps.cartridges.entity.CartridgeModel;
 import ru.komiufps.cartridges.entity.СartridgeStatus;
 import ru.komiufps.cartridges.service.CartridgeForOrderService;
+import ru.komiufps.cartridges.service.CartridgeModelService;
 import ru.komiufps.cartridges.service.CartridgeService;
-import ru.komiufps.cartridges.service.СartridgeModelService;
 import ru.komiufps.cartridges.service.СartridgeStatusService;
 import ru.komiufps.cartridges.utils.BaseResponse;
 import ru.komiufps.cartridges.utils.CartridgeChecker;
 import ru.komiufps.cartridges.utils.CheckerException;
+import ru.komiufps.cartridges.utils.ListOfSerialNumbersToAdd;
 
 import java.util.List;
 
@@ -26,23 +27,25 @@ import java.util.List;
 
 public class CartridgeController {
     private final CartridgeService cartridgeService;
-    private final СartridgeModelService cartridgeModelService;
+    private final CartridgeModelService cartridgeModelService;
     private final СartridgeStatusService cartridgeStatusService;
     private final CartridgeForOrderService cartridgeForOrderService;
     private final CartridgeChecker cartridgeChecker;
 
-    @PostMapping("/add")
-    public void addCartridge(@RequestBody String cartridgeList) {
-        System.out.println(cartridgeList);
-    }
+    @GetMapping("/checkCartridgeSerialNumber")
+    public String checkCartridgeSerialNumber(@RequestParam(value = "serialNumber") String serialNumber) {
+        try {
+            cartridgeService.getCartridgeBySerialNumber(serialNumber);
+        } catch (ResponseStatusException e) {
+            return serialNumber;
+        }
 
-    @PostMapping("/addModel")
-    public void addСartridgeModel(@RequestBody СartridgeModel cartridgeModel) {
-        cartridgeModelService.addСartridgeModel(cartridgeModel);
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Картриджа с S/N: " + serialNumber + " уже зарегистрирован в базе!");
     }
 
     @PostMapping("/addStatus")
-    public void addСartridgeStatus(@RequestBody СartridgeStatus cartridgeStatus) {
+    public void addCartridgeStatus(@RequestBody СartridgeStatus cartridgeStatus) {
         cartridgeStatusService.addСartridgeStatus(cartridgeStatus);
     }
 
@@ -50,6 +53,12 @@ public class CartridgeController {
     public List<СartridgeStatus> getAllStatus() {
         return cartridgeStatusService.getAllStatus();
     }
+
+    @GetMapping("/getAllModels")
+    public List<CartridgeModel> getAllModels() {
+        return cartridgeModelService.getAllModels();
+    }
+
 
     @GetMapping("/getCartrigeBySerialNumber")
     public Cartridge getCartrigeBySerialNumber(@RequestParam(value = "operation") String operation,
@@ -74,6 +83,24 @@ public class CartridgeController {
 
         return BaseResponse.builder()
                 .message("Картриджы успешно выведены из эксплуатации.")
+                .build();
+    }
+
+    @PostMapping("/addCartridges")
+    public BaseResponse addCartridges(@RequestBody ListOfSerialNumbersToAdd listOfSerialNumbersToAdd) {
+        System.out.println(listOfSerialNumbersToAdd.toString());
+
+        listOfSerialNumbersToAdd.getSerialNumbers()
+                .forEach(serialNumber -> {
+                    Cartridge cartridge = new Cartridge();
+                    cartridge.setCartridgeModel(listOfSerialNumbersToAdd.getCartridgeModel());
+                    cartridge.setSerialNumber(serialNumber);
+                    cartridgeService.save(cartridge);
+                });
+
+        return BaseResponse
+                .builder()
+                .message("Новые картриджы добавлены в базу!")
                 .build();
     }
 

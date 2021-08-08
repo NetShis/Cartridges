@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 public class ListCartridgeForRefueller {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

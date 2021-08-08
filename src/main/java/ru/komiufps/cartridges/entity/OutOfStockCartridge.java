@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class OutOfStockCartridge {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -24,6 +24,6 @@ public class OutOfStockCartridge {
 
     @OneToOne
     @JsonProperty(value = "cartridgeModel")
-    private СartridgeModel cartridgeModel;
+    private CartridgeModel cartridgeModel;
 
 }

@@ -28,4 +28,6 @@ document.addEventListener('click', event=>{
         giveOutCartridge.open()
     if (event.target.dataset.btn === 'deregister-cartridge')
         deregisterCartridge.open()
+    if (event.target.dataset.btn === 'add-new-cartridge')
+        addNewCartridge.open()
 })

@@ -15,21 +15,21 @@ import java.time.LocalDateTime;
 public class CartridgeForOrder {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JsonProperty(value = "orderForConsumer")
     private OrderForConsumer orderForConsumer;
 
-    @OneToOne
+    @ManyToOne
     @JsonProperty(value = "cartridge")
     private Cartridge cartridge;
 
     @JsonProperty(value = "dateTheCartridgeWasReturn")
     private LocalDateTime dateTheCartridgeWasReturn;
 
-    @OneToOne
+    @ManyToOne
     @JsonProperty(value = "cartridgeStatus")
     private СartridgeStatus cartridgeStatus;
 }
