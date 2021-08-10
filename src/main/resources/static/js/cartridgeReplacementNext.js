@@ -51,34 +51,23 @@ const cartridgeReplacementNext = $.modal({
             </table>`,
 
     method: 'GET',
-    path: '/cartridge/getCartrigeBySerialNumber?operation=giveOutCartridge&serialNumber=',
+    path: '/cartridge/getCartridgeBySerialNumber?operation=giveOutCartridge&serialNumber=',
     handler: function (data) {
 
-        let change = document.getElementById(data['cartridgeModel']['cartridgeModel'])
+        let replace = document.getElementById(data['cartridgeModel']['cartridgeModel'])
 
-        if (change == null) {
-            const tr = document.createElement('tr')
-            let td = document.createElement('td')
+        if (replace == null) {
+            window.alert('В списке на замену нет такой модели картриджа!')
 
-            tr.appendChild(td)
-
-            td = document.createElement('td')
-            td.textContent = data['cartridgeModel']['cartridgeModel']
-            tr.appendChild(td)
-
-            td = document.createElement('td')
-            td.textContent = data['serialNumber']
-            tr.appendChild(td)
-
-            document.querySelector('tbody').appendChild(tr)
         } else {
-            change.textContent = '✅'
-            let serialNumberElement = change.parentElement.querySelector('#serialNumber')
+            replace.textContent = '✅'
+            let serialNumberElement = replace.parentElement.querySelector('#serialNumber')
             serialNumberElement.textContent = data['serialNumber']
-            change.removeAttribute('id')
+            replace.removeAttribute('id')
+
+            cartridgeReplacementNext.cartridgeList.push(data)
         }
 
-        cartridgeReplacementNext.cartridgeList.push(data)
     }
 })
 

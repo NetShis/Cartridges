@@ -49,6 +49,14 @@ $.modal = function (options) {
 
     }
 
+    function _getRefueller() {
+        const h3 = document.createElement('H3')
+        _request('GET', '/refueller/getDefaultRefueller', data => {
+            h3.textContent = 'Поручение на заправку для: ' + data['nameOfRefueller']
+        })
+        return h3
+    }
+
 
     const returnModal = {
         myModal: '',
@@ -84,8 +92,13 @@ $.modal = function (options) {
                 consumerList.appendChild(_getAllConsumers())
 
             const chooseModelCartridge = document.querySelector('#choose-model-cartridge')
-            if (chooseModelCartridge !== null) {
+            if (chooseModelCartridge !== null)
                 chooseModelCartridge.appendChild(_getAllModelCartridge())
+
+
+            const refueller = document.querySelector('#refueller-item')
+            if (refueller !== null) {
+                refueller.appendChild(_getRefueller())
             }
 
 

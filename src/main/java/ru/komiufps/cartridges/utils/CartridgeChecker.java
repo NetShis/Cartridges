@@ -26,6 +26,11 @@ public class CartridgeChecker {
             deregistrationDateCheck(cartridge);
         }
 
+        if (operation.equals("refuelingOrder")) {
+            cartridgeGiveOutCheck(cartridge);
+            deregistrationDateCheck(cartridge);
+        }
+
     }
 
     private void deregistrationDateCheck(Cartridge cartridge) throws CheckerException {

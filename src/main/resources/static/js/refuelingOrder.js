@@ -1,32 +1,33 @@
-
-const deregisterCartridge = $.modal({
+const refuelingOrder = $.modal({
     footerButtons: [
         {
-            text: 'Списать',
+            text: 'Сформировать',
             cssType: 'ok-next',
             handler() {
-                if (deregisterCartridge.cartridgeList.length !==0)
-                    _request('PUT','/cartridge/deregister',null, deregisterCartridge.cartridgeList)
-                else window.alert('Список картриджей пуст, картриджы не будут списаны! ')
-                deregisterCartridge.close()
+                if (refuelingOrder.cartridgeList.length !== 0)
+                    _request('POST', '/refueller/createOrder', null, refuelingOrder.cartridgeList)
+                else
+                    window.alert('Список пуст, поручение на заправку не сформировано!')
+                refuelingOrder.close()
             }
         },
         {
             text: 'Отмена',
             cssType: 'destroy',
             handler() {
-                deregisterCartridge.close()
+                refuelingOrder.close()
             }
         }
     ],
     setContent: `
+            <div id="refueller-item"></div>
             <h3>Сканируйте серийный номер картриджа</h3>
             <table>
                 <thead>
                     <tr>
+                        <th>№</th> 
+                        <th>Модель</th>    
                         <th>S/N</th>
-                        <th>Модель</th>
-                        <th>Дата регистрации</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,26 +35,25 @@ const deregisterCartridge = $.modal({
             </table>`,
 
     method: 'GET',
-    path: '/cartridge/getCartridgeBySerialNumber?operation=deregisterCartridge&serialNumber=',
+    path: '/cartridge/getCartridgeBySerialNumber?operation=refuelingOrder&serialNumber=',
     handler: function (data) {
         let tbody = document.querySelector('tbody')
         let tr = document.createElement('tr')
         let td = document.createElement('td')
 
-        td.textContent = data['serialNumber']
+        td.textContent = (refuelingOrder.cartridgeList.length + 1) + ''
         tr.appendChild(td)
-
 
         td = document.createElement('td')
         td.textContent = data['cartridgeModel']['cartridgeModel']
         tr.appendChild(td)
 
         td = document.createElement('td')
-        td.textContent = data['registrationDate']
+        td.textContent = data['serialNumber']
         tr.appendChild(td)
 
         tbody.appendChild(tr)
-        deregisterCartridge.cartridgeList.push(data)
+        refuelingOrder.cartridgeList.push(data)
     }
 })
 

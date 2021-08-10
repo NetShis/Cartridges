@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
-public class ListCartridgeForRefueller {
+public class CartridgeForRefueller {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

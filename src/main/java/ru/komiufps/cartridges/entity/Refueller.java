@@ -21,4 +21,8 @@ public class Refueller {
     @JsonProperty(value = "nameOfRefueller")
     @Column(unique = true)
     private String nameOfRefueller;
+
+    @JsonProperty(value = "isDefault")
+    private boolean isDefault;
+
 }

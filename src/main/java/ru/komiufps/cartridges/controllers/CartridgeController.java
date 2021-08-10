@@ -60,9 +60,9 @@ public class CartridgeController {
     }
 
 
-    @GetMapping("/getCartrigeBySerialNumber")
-    public Cartridge getCartrigeBySerialNumber(@RequestParam(value = "operation") String operation,
-                                               @RequestParam(value = "serialNumber") String serialNumber) {
+    @GetMapping("/getCartridgeBySerialNumber")
+    public Cartridge getCartridgeBySerialNumber(@RequestParam(value = "operation") String operation,
+                                                @RequestParam(value = "serialNumber") String serialNumber) {
 
         Cartridge cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
 

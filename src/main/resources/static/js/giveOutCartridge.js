@@ -43,7 +43,7 @@ const giveOutCartridge = $.modal({
             </table>`,
 
     method: 'GET',
-    path: '/cartridge/getCartrigeBySerialNumber?operation=giveOutCartridge&serialNumber=',
+    path: '/cartridge/getCartridgeBySerialNumber?operation=giveOutCartridge&serialNumber=',
     handler: function (data) {
         let tbody = document.querySelector('tbody')
         let tr = document.createElement('tr')

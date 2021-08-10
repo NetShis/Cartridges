@@ -38,3 +38,9 @@ VALUES (null, 1, null, 1);
 INSERT INTO cartridge_for_order (date_the_cartridge_was_return, cartridge_id, cartridge_status_id,
                                  order_for_consumer_id)
 VALUES (null, 3, null, 1);
+
+INSERT INTO refueller (name_of_refueller, is_default)
+VALUES ('Коковкин', true);
+
+INSERT INTO refueller (name_of_refueller, is_default)
+VALUES ('Муравьев', false);
