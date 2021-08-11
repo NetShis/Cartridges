@@ -4,18 +4,17 @@ const takeCartridge = $.modal({
             text: 'Принять',
             cssType: 'ok-next',
             handler() {
-                if (takeCartridge.cartridgeOrderList.length !== 0) {
-                    for (let orderElement of takeCartridge.cartridgeOrderList) {
+                if (takeCartridge.cartridgeOrderListForConsumer.length !== 0) {
+                    for (let orderElement of takeCartridge.cartridgeOrderListForConsumer) {
                         let status = document.getElementById(orderElement['id'])
 
-                        orderElement['cartridgeStatus'] = {
+                        orderElement['statusCartridgeAfterConsumer'] = {
                             id: Number.parseInt(status.value)
                         }
                     }
 
-                    _request('PUT', '/order/closeOrders', null, takeCartridge.cartridgeOrderList)
-                }
-                else window.alert('Список пуст, дальнейшее оформление не возможно, ' +
+                    _request('PUT', '/consumer/closeOrders', null, takeCartridge.cartridgeOrderListForConsumer)
+                } else window.alert('Список пуст, дальнейшее оформление не возможно, ' +
                         'данное окно будет закрыто!')
                 takeCartridge.close()
             }
@@ -45,44 +44,51 @@ const takeCartridge = $.modal({
             </table>`,
 
     method: 'GET',
-    path: '/order/getOrder?serialNumber=',
+    path: '/consumer/getOrder?serialNumber=',
     handler: function (data) {
+        takeCartridge.cartridgeOrderListForConsumer.push(data)
 
-        let tbody = document.querySelector('tbody')
-        let tr = document.createElement('tr')
-        let td = document.createElement('td')
+        if (takeCartridge.cartridgeOrderListForConsumer[0]['orderForConsumer']['consumer']['id']
+            === data['orderForConsumer']['consumer']['id']) {
 
-        td.textContent = data['cartridge']['serialNumber']
-        tr.appendChild(td)
+            let tbody = document.querySelector('tbody')
+            let tr = document.createElement('tr')
+            let td = document.createElement('td')
 
-        td = document.createElement('td')
-        let status = document.createElement('select')
-        status.setAttribute('id', data['id'])
-        for (const dataKey of takeCartridge.allStatus) {
-            const option = document.createElement('option')
-            option.textContent = dataKey['Status']
-            option.setAttribute('value', dataKey['id'])
-            status.appendChild(option)
-        }
+            td.textContent = data['cartridge']['serialNumber']
+            tr.appendChild(td)
 
-        td.appendChild(status)
-        tr.appendChild(td)
+            td = document.createElement('td')
+            let status = document.createElement('select')
+            status.setAttribute('id', data['id'])
+            for (const dataKey of takeCartridge.allStatusAfterConsumer) {
+                const option = document.createElement('option')
+                option.textContent = dataKey['status']
+                option.setAttribute('value', dataKey['id'])
+                status.appendChild(option)
+            }
 
-        td = document.createElement('td')
-        td.textContent = data['cartridge']['cartridgeModel']['cartridgeModel']
-        tr.appendChild(td)
+            td.appendChild(status)
+            tr.appendChild(td)
 
-        td = document.createElement('td')
-        td.textContent = data['orderForConsumer']['consumer']['nameOfConsumer']
-        tr.appendChild(td)
+            td = document.createElement('td')
+            td.textContent = data['cartridge']['cartridgeModel']['cartridgeModel']
+            tr.appendChild(td)
 
-        td = document.createElement('td')
-        td.textContent = data['orderForConsumer']['orderDate']
-        tr.appendChild(td)
+            td = document.createElement('td')
+            td.textContent = data['orderForConsumer']['consumer']['nameOfConsumer']
+            tr.appendChild(td)
 
+            td = document.createElement('td')
+            td.textContent = data['orderForConsumer']['orderDate']
+            tr.appendChild(td)
 
-        tbody.appendChild(tr)
-        takeCartridge.cartridgeOrderList.push(data)
+            tbody.appendChild(tr)
+
+        } else
+            window.alert('Картридж числиться выданным другому пользователю: '
+                + data['orderForConsumer']['consumer']['nameOfConsumer'])
+
     }
 })
 

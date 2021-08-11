@@ -34,7 +34,7 @@ const deregisterCartridge = $.modal({
             </table>`,
 
     method: 'GET',
-    path: '/cartridge/getCartridgeBySerialNumber?operation=deregisterCartridge&serialNumber=',
+    path: '/cartridge/getCartridgeBySerialNumber?operation=DeregisterCartridge&serialNumber=',
     handler: function (data) {
         let tbody = document.querySelector('tbody')
         let tr = document.createElement('tr')

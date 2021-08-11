@@ -1,5 +1,6 @@
 package ru.komiufps.cartridges.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,14 +12,13 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Entity
-public class CartridgeModel {
+public class StatusCartridgeAfterRefueller {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonProperty(value = "cartridgeModel")
+    @JsonProperty(value = "status")
     @Column(unique = true)
-    private String cartridgeModel;
-
+    private String status;
 }
-

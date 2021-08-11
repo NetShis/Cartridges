@@ -29,6 +29,6 @@ public class CartridgeForRefueller {
     private LocalDateTime dateTheCartridgeWasReturn;
 
     @OneToOne
-    @JsonProperty(value = "cartridgeStatus")
-    private СartridgeStatus cartridgeStatus;
+    @JsonProperty(value = "statusCartridgeAfterRefueller")
+    private StatusCartridgeAfterRefueller statusCartridgeAfterRefueller;
 }

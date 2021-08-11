@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
-public class CartridgeForOrder {
+public class CartridgeForConsumer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +30,6 @@ public class CartridgeForOrder {
     private LocalDateTime dateTheCartridgeWasReturn;
 
     @ManyToOne
-    @JsonProperty(value = "cartridgeStatus")
-    private СartridgeStatus cartridgeStatus;
+    @JsonProperty(value = "statusCartridgeAfterConsumer")
+    private StatusCartridgeAfterConsumer statusCartridgeAfterConsumer;
 }

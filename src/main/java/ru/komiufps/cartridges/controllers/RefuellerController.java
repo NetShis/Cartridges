@@ -2,16 +2,15 @@ package ru.komiufps.cartridges.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.komiufps.cartridges.entity.Cartridge;
-import ru.komiufps.cartridges.entity.CartridgeForRefueller;
-import ru.komiufps.cartridges.entity.OrderForRefueller;
-import ru.komiufps.cartridges.entity.Refueller;
-import ru.komiufps.cartridges.service.CartridgeForRefuellerService;
-import ru.komiufps.cartridges.service.OrderForRefuellerService;
-import ru.komiufps.cartridges.service.RefuellerService;
+import org.springframework.web.server.ResponseStatusException;
+import ru.komiufps.cartridges.entity.*;
+import ru.komiufps.cartridges.service.*;
 import ru.komiufps.cartridges.utils.BaseResponse;
+import ru.komiufps.cartridges.utils.CartridgeChecker;
+import ru.komiufps.cartridges.utils.CheckerException;
 
 import java.util.List;
 
@@ -24,6 +23,9 @@ public class RefuellerController {
     private final RefuellerService refuellerService;
     private final OrderForRefuellerService orderForRefuellerService;
     private final CartridgeForRefuellerService cartridgeForRefuellerService;
+    private final StatusCartridgeAfterRefuellerService statusCartridgeAfterRefuellerService;
+    private final CartridgeService cartridgeService;
+    private final CartridgeChecker cartridgeChecker;
 
     @PostMapping("/createOrder")
     public BaseResponse createOrder(@RequestBody List<Cartridge> cartridgeList) {
@@ -49,4 +51,33 @@ public class RefuellerController {
         return refuellerService.getDefaultRefueller();
     }
 
+    @GetMapping("/getAllStatusAfterRefueller")
+    public List<StatusCartridgeAfterRefueller> getAllStatusAfterRefueller() {
+        return statusCartridgeAfterRefuellerService.getAllStatusAfterRefueller();
+    }
+
+    @GetMapping("/getOrder")
+    public CartridgeForRefueller getOrder(@RequestParam(value = "serialNumber") String serialNumber) {
+        Cartridge cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
+        try {
+            cartridgeChecker.check(cartridge, "CartridgesFromRefueller");
+        } catch (CheckerException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
+        return cartridgeForRefuellerService
+                .getCartridgeForRefueller(cartridge)
+                .get();
+    }
+
+    @PutMapping("/closeOrders")
+    public BaseResponse closeOrders(@RequestBody List<CartridgeForRefueller> cartridgeForRefuellerList) {
+        cartridgeForRefuellerService.closeOrders(cartridgeForRefuellerList);
+
+        return BaseResponse
+                .builder()
+                .message("Заказ успешно закрыт.")
+                .build();
+    }
 }

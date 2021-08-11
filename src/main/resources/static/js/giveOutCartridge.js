@@ -13,7 +13,7 @@ const giveOutCartridge = $.modal({
                         cartridges: giveOutCartridge.cartridgeList
                     }
 
-                    _request('POST', '/order/createOrder', null, consumerReplacementCartridgesList)
+                    _request('POST', '/consumer/createOrder', null, consumerReplacementCartridgesList)
                 }
                 else window.alert('Список картриджей для выдачи пуст. Заказ на выдачу не сформирован!')
                 giveOutCartridge.close()
@@ -43,7 +43,7 @@ const giveOutCartridge = $.modal({
             </table>`,
 
     method: 'GET',
-    path: '/cartridge/getCartridgeBySerialNumber?operation=giveOutCartridge&serialNumber=',
+    path: '/cartridge/getCartridgeBySerialNumber?operation=GiveOutCartridge&serialNumber=',
     handler: function (data) {
         let tbody = document.querySelector('tbody')
         let tr = document.createElement('tr')

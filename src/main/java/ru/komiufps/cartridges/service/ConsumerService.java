@@ -14,10 +14,6 @@ public class ConsumerService {
 
     private final ConsumerRepository consumerRepository;
 
-    public void addConsumer(Consumer consumer) {
-        consumerRepository.save(consumer);
-    }
-
     public List<Consumer> getAllConsumers() {
         return consumerRepository.findAll();
     }

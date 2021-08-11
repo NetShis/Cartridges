@@ -4,20 +4,20 @@ const cartridgeReplacement = $.modal({
             text: 'Далее',
             cssType: 'ok-next',
             handler() {
-                if (cartridgeReplacement.cartridgeOrderList.length === 0) {
+                if (cartridgeReplacement.cartridgeOrderListForConsumer.length === 0) {
                     window.alert('Список пуст, дальнейшее оформление не возможно, ' +
                         'данное окно будет закрыто!')
                     cartridgeReplacement.close()
                 } else {
-                    for (let orderElement of cartridgeReplacement.cartridgeOrderList) {
+                    for (let orderElement of cartridgeReplacement.cartridgeOrderListForConsumer) {
                         let status = document.getElementById(orderElement['id'])
 
-                        orderElement['cartridgeStatus'] = {
+                        orderElement['statusCartridgeAfterConsumer'] = {
                             id: Number.parseInt(status.value)
                         }
                     }
-                    cartridgeReplacementNext.cartridgeOrderListAfterTakeStep
-                        = cartridgeReplacement.cartridgeOrderList
+                    cartridgeReplacementNext.cartridgeOrderListForConsumerAfterFirstStep
+                        = cartridgeReplacement.cartridgeOrderListForConsumer
                     cartridgeReplacement.close()
                     cartridgeReplacementNext.open()
                 }
@@ -48,9 +48,13 @@ const cartridgeReplacement = $.modal({
             </table>`,
 
     method: 'GET',
-    path: '/order/getOrder?serialNumber=',
+    path: '/consumer/getOrder?serialNumber=',
     handler: function (data) {
-        if (cartridgeReplacement.cartridgeOrderList.length === 0) {
+        cartridgeReplacement.cartridgeOrderListForConsumer.push(data)
+
+        if (cartridgeReplacement.cartridgeOrderListForConsumer[0]['orderForConsumer']['consumer']['id']
+            === data['orderForConsumer']['consumer']['id']) {
+
             let tbody = document.querySelector('tbody')
             let tr = document.createElement('tr')
             let td = document.createElement('td')
@@ -61,9 +65,9 @@ const cartridgeReplacement = $.modal({
             td = document.createElement('td')
             let status = document.createElement('select')
             status.setAttribute('id', data['id'])
-            for (const dataKey of cartridgeReplacement.allStatus) {
+            for (const dataKey of cartridgeReplacement.allStatusAfterConsumer) {
                 const option = document.createElement('option')
-                option.textContent = dataKey['Status']
+                option.textContent = dataKey['status']
                 option.setAttribute('value', dataKey['id'])
                 status.appendChild(option)
             }
@@ -84,52 +88,11 @@ const cartridgeReplacement = $.modal({
             tr.appendChild(td)
 
             tbody.appendChild(tr)
-            cartridgeReplacement.cartridgeOrderList.push(data)
-        } else {
-            if (cartridgeReplacement
-                    .cartridgeOrderList[0]
-                    ['orderForConsumer']['consumer']['id']
-                === data['orderForConsumer']['consumer']['id']) {
 
-                let tbody = document.querySelector('tbody')
-                let tr = document.createElement('tr')
-                let td = document.createElement('td')
+        } else
+            window.alert('Картридж числиться выданным другому пользователю: '
+                + data['orderForConsumer']['consumer']['nameOfConsumer'])
 
-                td.textContent = data['cartridge']['serialNumber']
-                tr.appendChild(td)
-
-                td = document.createElement('td')
-                let status = document.createElement('select')
-                status.setAttribute('id', data['id'])
-                for (const dataKey of cartridgeReplacement.allStatus) {
-                    const option = document.createElement('option')
-                    option.textContent = dataKey['Status']
-                    option.setAttribute('value', dataKey['id'])
-                    status.appendChild(option)
-                }
-
-                td.appendChild(status)
-                tr.appendChild(td)
-
-                td = document.createElement('td')
-                td.textContent = data['cartridge']['cartridgeModel']['cartridgeModel']
-                tr.appendChild(td)
-
-                td = document.createElement('td')
-                td.textContent = data['orderForConsumer']['consumer']['nameOfConsumer']
-                tr.appendChild(td)
-
-                td = document.createElement('td')
-                td.textContent = data['orderForConsumer']['orderDate']
-                tr.appendChild(td)
-
-                tbody.appendChild(tr)
-                cartridgeReplacement.cartridgeOrderList.push(data)
-
-            } else
-                window.alert('Картридж числиться выданным другому пользователю: '
-                    + data['orderForConsumer']['consumer']['nameOfConsumer'])
-        }
     }
 })
 

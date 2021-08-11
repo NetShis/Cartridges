@@ -7,11 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.komiufps.cartridges.entity.Cartridge;
 import ru.komiufps.cartridges.entity.CartridgeModel;
-import ru.komiufps.cartridges.entity.СartridgeStatus;
-import ru.komiufps.cartridges.service.CartridgeForOrderService;
 import ru.komiufps.cartridges.service.CartridgeModelService;
 import ru.komiufps.cartridges.service.CartridgeService;
-import ru.komiufps.cartridges.service.СartridgeStatusService;
+import ru.komiufps.cartridges.service.StatusCartridgeAfterConsumerService;
 import ru.komiufps.cartridges.utils.BaseResponse;
 import ru.komiufps.cartridges.utils.CartridgeChecker;
 import ru.komiufps.cartridges.utils.CheckerException;
@@ -28,9 +26,13 @@ import java.util.List;
 public class CartridgeController {
     private final CartridgeService cartridgeService;
     private final CartridgeModelService cartridgeModelService;
-    private final СartridgeStatusService cartridgeStatusService;
-    private final CartridgeForOrderService cartridgeForOrderService;
+    private final StatusCartridgeAfterConsumerService statusCartridgeAfterConsumerService;
     private final CartridgeChecker cartridgeChecker;
+
+    @GetMapping("/getAllModels")
+    public List<CartridgeModel> getAllModels() {
+        return cartridgeModelService.getAllModels();
+    }
 
     @GetMapping("/checkCartridgeSerialNumber")
     public String checkCartridgeSerialNumber(@RequestParam(value = "serialNumber") String serialNumber) {
@@ -42,21 +44,6 @@ public class CartridgeController {
 
         throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Картриджа с S/N: " + serialNumber + " уже зарегистрирован в базе!");
-    }
-
-    @PostMapping("/addStatus")
-    public void addCartridgeStatus(@RequestBody СartridgeStatus cartridgeStatus) {
-        cartridgeStatusService.addСartridgeStatus(cartridgeStatus);
-    }
-
-    @GetMapping("/getAllStatus")
-    public List<СartridgeStatus> getAllStatus() {
-        return cartridgeStatusService.getAllStatus();
-    }
-
-    @GetMapping("/getAllModels")
-    public List<CartridgeModel> getAllModels() {
-        return cartridgeModelService.getAllModels();
     }
 
 

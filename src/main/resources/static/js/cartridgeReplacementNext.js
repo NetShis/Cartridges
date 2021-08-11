@@ -5,21 +5,21 @@ const cartridgeReplacementNext = $.modal({
             cssType: 'ok-next',
             handler() {
 
-                _request('PUT', '/order/closeOrders', null, cartridgeReplacementNext
-                    .cartridgeOrderListAfterTakeStep)
+                _request('PUT', '/consumer/closeOrders', null, cartridgeReplacementNext
+                    .cartridgeOrderListForConsumerAfterFirstStep)
 
 
                 if (cartridgeReplacementNext.cartridgeList.length !== 0) {
                     const consumerReplacementCartridgesList = {
                         consumer: {
                             id: cartridgeReplacementNext
-                                .cartridgeOrderListAfterTakeStep[0]
+                                .cartridgeOrderListForConsumerAfterFirstStep[0]
                                 ['orderForConsumer']['consumer']['id']
                         },
                         cartridges: cartridgeReplacementNext.cartridgeList
                     }
 
-                    _request('POST', '/order/createOrder', null, consumerReplacementCartridgesList)
+                    _request('POST', '/consumer/createOrder', null, consumerReplacementCartridgesList)
                 }
                 else
                     window.alert('Список картриджей для выдачи пуст. Заказ на выдачу не сформирован!')

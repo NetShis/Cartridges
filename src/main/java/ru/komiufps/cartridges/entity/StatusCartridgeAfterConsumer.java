@@ -11,14 +11,14 @@ import javax.persistence.*;
 @Setter
 @ToString
 @Entity
-public class СartridgeStatus {
+public class StatusCartridgeAfterConsumer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonProperty(value = "Status")
+    @JsonProperty(value = "status")
     @Column(unique = true)
-    private String Status;
+    private String status;
 
 }

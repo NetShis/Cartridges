@@ -62,20 +62,25 @@ $.modal = function (options) {
         myModal: '',
         cartridgeList: [],
         serialNumbersReceived: [],
-        cartridgeOrderList: [],
-        allStatus: [],
-        cartridgeOrderListAfterTakeStep: [],
+        cartridgeOrderListForConsumer: [],
+        cartridgeOrderListForRefueller: [],
+        allStatusAfterConsumer: [],
+        allStatusAfterRefueller: [],
+        cartridgeOrderListForConsumerAfterFirstStep: [],
 
         open() {
             this.serialNumbersReceived = []
             this.cartridgeList = []
-            this.cartridgeOrderList = []
+            this.cartridgeOrderListForConsumer = []
+            this.cartridgeOrderListForRefueller = []
 
-            _request('GET', '/cartridge/getAllStatus',
-                data => this.allStatus = data)
+            _request('GET', '/consumer/getAllStatusAfterConsumer',
+                data => this.allStatusAfterConsumer = data)
+
+            _request('GET', '/refueller/getAllStatusAfterRefueller',
+                data => this.allStatusAfterRefueller = data)
 
             this.myModal = _createModal(options)
-
             document.body.appendChild(this.myModal)
 
             const footer = document.querySelector('.footer')
@@ -101,14 +106,13 @@ $.modal = function (options) {
                 refueller.appendChild(_getRefueller())
             }
 
-
             const cartridgeListForReplacement = document.querySelector('#cartridge-list-for-replacement')
             if (cartridgeListForReplacement !== null) {
                 document.querySelector('#consumer-name').textContent
-                    = 'Для пользователя: ' + this.cartridgeOrderListAfterTakeStep[0]
+                    = 'Для пользователя: ' + this.cartridgeOrderListForConsumerAfterFirstStep[0]
                     ['orderForConsumer']['consumer']['nameOfConsumer']
 
-                for (let orderElement of this.cartridgeOrderListAfterTakeStep) {
+                for (let orderElement of this.cartridgeOrderListForConsumerAfterFirstStep) {
                     const tr = document.createElement('tr')
                     let td = document.createElement('td')
 

@@ -16,12 +16,13 @@
     <h1>Ни один картридж не будет потерян!</h1>
 </header>
 <main>
-        <button class="button-menu" data-btn="cartridge-replacement">Замена картридж</button>
+        <button class="button-menu" data-btn="cartridge-replacement">Замена картриджа</button>
         <button class="button-menu" data-btn="take-cartridge">Принять картридж</button>
         <button class="button-menu" data-btn="give-out-cartridge">Выдать картридж</button>
         <button class="button-menu" data-btn="deregister-cartridge">Списать картридж</button>
         <button class="button-menu" data-btn="add-new-cartridge">Добавить новый картридж</button>
-        <button class="button-menu" data-btn="refueling-order">Сформировать поручение на заправку</button>
+        <button class="button-menu" data-btn="cartridges-to-refueller">Сформировать поручение на заправку</button>
+        <button class="button-menu" data-btn="cartridges-from-refueller">Принять картридж после заправки</button>
 </main>
 <script th:src="@{/js/util.js}"></script>
 <script th:src="@{/js/modal.js}"></script>
@@ -31,6 +32,7 @@
 <script th:src="@{/js/giveOutCartridge.js}"></script>
 <script th:src="@{/js/addNewCartridge.js}"></script>
 <script th:src="@{/js/deregisterCartridge.js}"></script>
-<script th:src="@{/js/refuelingOrder.js}"></script>
+<script th:src="@{/js/cartridgesToRefueller.js}"></script>
+<script th:src="@{/js/cartridgesFromRefueller.js}"></script>
 </body>
 </html>

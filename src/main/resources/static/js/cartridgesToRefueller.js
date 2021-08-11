@@ -1,21 +1,21 @@
-const refuelingOrder = $.modal({
+const cartridgesToRefueller = $.modal({
     footerButtons: [
         {
             text: 'Сформировать',
             cssType: 'ok-next',
             handler() {
-                if (refuelingOrder.cartridgeList.length !== 0)
-                    _request('POST', '/refueller/createOrder', null, refuelingOrder.cartridgeList)
+                if (cartridgesToRefueller.cartridgeList.length !== 0)
+                    _request('POST', '/refueller/createOrder', null, cartridgesToRefueller.cartridgeList)
                 else
                     window.alert('Список пуст, поручение на заправку не сформировано!')
-                refuelingOrder.close()
+                cartridgesToRefueller.close()
             }
         },
         {
             text: 'Отмена',
             cssType: 'destroy',
             handler() {
-                refuelingOrder.close()
+                cartridgesToRefueller.close()
             }
         }
     ],
@@ -35,13 +35,13 @@ const refuelingOrder = $.modal({
             </table>`,
 
     method: 'GET',
-    path: '/cartridge/getCartridgeBySerialNumber?operation=refuelingOrder&serialNumber=',
+    path: '/cartridge/getCartridgeBySerialNumber?operation=CartridgesToRefueller&serialNumber=',
     handler: function (data) {
         let tbody = document.querySelector('tbody')
         let tr = document.createElement('tr')
         let td = document.createElement('td')
 
-        td.textContent = (refuelingOrder.cartridgeList.length + 1) + ''
+        td.textContent = (cartridgesToRefueller.cartridgeList.length + 1) + ''
         tr.appendChild(td)
 
         td = document.createElement('td')
@@ -53,7 +53,7 @@ const refuelingOrder = $.modal({
         tr.appendChild(td)
 
         tbody.appendChild(tr)
-        refuelingOrder.cartridgeList.push(data)
+        cartridgesToRefueller.cartridgeList.push(data)
     }
 })
 

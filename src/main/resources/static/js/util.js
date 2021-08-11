@@ -30,10 +30,11 @@ document.addEventListener('click', event=>{
         deregisterCartridge.open()
     if (event.target.dataset.btn === 'add-new-cartridge')
         addNewCartridge.open()
-    if (event.target.dataset.btn === 'refueling-order') {
+    if (event.target.dataset.btn === 'cartridges-to-refueller') {
         _request('GET', '/refueller/getDefaultRefueller', data => {
-            refuelingOrder.open()
+            cartridgesToRefueller.open()
         })
     }
-
+    if (event.target.dataset.btn === 'cartridges-from-refueller')
+        cartridgesFromRefueller.open()
 })
