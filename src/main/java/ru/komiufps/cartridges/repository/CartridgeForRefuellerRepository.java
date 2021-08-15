@@ -10,5 +10,13 @@ import java.util.Optional;
 public interface CartridgeForRefuellerRepository extends JpaRepository<CartridgeForRefueller, Long> {
     @Query("FROM CartridgeForRefueller as l WHERE l.cartridge = ?1 and l.dateTheCartridgeWasReturn is null")
     Optional<CartridgeForRefueller> findCartridgeForRefueller(Cartridge cartridge);
+
+    @Query("FROM CartridgeForRefueller as c WHERE c.dateTheCartridgeWasReturn = (SELECT max(cfc.dateTheCartridgeWasReturn) FROM CartridgeForRefueller as cfc where cfc.cartridge= ?1)")
+    Optional<CartridgeForRefueller> maxDateTheCartridgeWasReturn (Cartridge cartridge);
+
+    @Query("FROM CartridgeForRefueller as c WHERE c.cartridge = ?1 and c.dateTheCartridgeWasReturn is null ")
+    Optional<CartridgeForRefueller> theCartridgeWasReturnIsNull (Cartridge cartridge);
+
+
 }
 

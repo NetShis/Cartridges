@@ -3,6 +3,7 @@ package ru.komiufps.cartridges.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.komiufps.cartridges.entity.Cartridge;
+import ru.komiufps.cartridges.entity.CartridgeForConsumer;
 import ru.komiufps.cartridges.entity.CartridgeForRefueller;
 import ru.komiufps.cartridges.repository.CartridgeForRefuellerRepository;
 
@@ -29,6 +30,13 @@ public class CartridgeForRefuellerService {
             cartridgeForRefuell.setDateTheCartridgeWasReturn(LocalDateTime.now());
             cartridgeForRefuellerRepository.save(cartridgeForRefuell);
         });
+    }
+
+    public Optional<CartridgeForRefueller> getLastStateCartridgeForRefueller(Cartridge cartridge) {
+        if (!cartridgeForRefuellerRepository.theCartridgeWasReturnIsNull(cartridge).isEmpty())
+            return cartridgeForRefuellerRepository.theCartridgeWasReturnIsNull(cartridge);
+        else
+            return cartridgeForRefuellerRepository.maxDateTheCartridgeWasReturn(cartridge);
     }
 }
 

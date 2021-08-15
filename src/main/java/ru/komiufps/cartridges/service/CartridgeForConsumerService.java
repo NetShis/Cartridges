@@ -31,4 +31,11 @@ public class CartridgeForConsumerService {
         cartridgeForConsumerRepository.save(cartridgeForConsumer);
     }
 
+    public Optional<CartridgeForConsumer> getLastStateCartridgeForConsumer(Cartridge cartridge) {
+        if (!cartridgeForConsumerRepository.theCartridgeWasReturnIsNull(cartridge).isEmpty())
+            return cartridgeForConsumerRepository.theCartridgeWasReturnIsNull(cartridge);
+        else
+            return cartridgeForConsumerRepository.maxDateTheCartridgeWasReturn(cartridge);
+    }
+
 }

@@ -37,4 +37,7 @@ document.addEventListener('click', event=>{
     }
     if (event.target.dataset.btn === 'cartridges-from-refueller')
         cartridgesFromRefueller.open()
+
+    if (event.target.dataset.btn === 'cartridges-status')
+        cartridgesStatus.open()
 })

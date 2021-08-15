@@ -10,10 +10,7 @@ import ru.komiufps.cartridges.entity.CartridgeModel;
 import ru.komiufps.cartridges.service.CartridgeModelService;
 import ru.komiufps.cartridges.service.CartridgeService;
 import ru.komiufps.cartridges.service.StatusCartridgeAfterConsumerService;
-import ru.komiufps.cartridges.utils.BaseResponse;
-import ru.komiufps.cartridges.utils.CartridgeChecker;
-import ru.komiufps.cartridges.utils.CheckerException;
-import ru.komiufps.cartridges.utils.ListOfSerialNumbersToAdd;
+import ru.komiufps.cartridges.utils.*;
 
 import java.util.List;
 
@@ -89,6 +86,18 @@ public class CartridgeController {
                 .builder()
                 .message("Новые картриджы добавлены в базу!")
                 .build();
+    }
+
+
+    @GetMapping("/getStatus")
+    public CurrentStatusOfCartridge getStatus(@RequestParam(value = "serialNumber") String serialNumber) {
+        CurrentStatusOfCartridge currentStatusOfCartridge = new CurrentStatusOfCartridge();
+        Cartridge cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
+
+        currentStatusOfCartridge.setCartridge(cartridge);
+        currentStatusOfCartridge.setStateCartridge(cartridgeChecker.getStateCartridge(cartridge));
+
+        return currentStatusOfCartridge;
     }
 
 }

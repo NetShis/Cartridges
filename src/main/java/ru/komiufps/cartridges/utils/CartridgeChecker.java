@@ -3,8 +3,12 @@ package ru.komiufps.cartridges.utils;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 import ru.komiufps.cartridges.entity.Cartridge;
+import ru.komiufps.cartridges.entity.CartridgeForConsumer;
+import ru.komiufps.cartridges.entity.CartridgeForRefueller;
 import ru.komiufps.cartridges.service.CartridgeForConsumerService;
 import ru.komiufps.cartridges.service.CartridgeForRefuellerService;
+
+import java.util.Optional;
 
 @Data
 @Service
@@ -13,65 +17,84 @@ public class CartridgeChecker {
     private final CartridgeForRefuellerService cartridgeForRefuellerService;
 
     public void check(Cartridge cartridge, String operation) throws CheckerException {
-        if (operation.equals("GiveOutCartridge")) {
-            deregistrationDateCheck(cartridge);
-            cartridgeGiveOutCheck(cartridge);
-            cartridgeAtRefuelingCheck(cartridge);
+        StateCartridge stateCartridge = getStateCartridge(cartridge);
+
+        switch (stateCartridge) {
+            case FullInStock:
+                if (operation.equals("CartridgeAfterConsumer")
+                        || operation.equals("CartridgesFromRefueller")
+                        || operation.equals("CartridgesToRefueller"))
+                    throw new CheckerException
+                            ("Картриджа с S/N: " + cartridge.getSerialNumber() + " числится на складе заправленным!");
+                break;
+
+            case EmptyInStock:
+                if (operation.equals("GiveOutCartridge")
+                        || operation.equals("CartridgeAfterConsumer")
+                        || operation.equals("CartridgesFromRefueller"))
+                    throw new CheckerException
+                            ("Картриджа с S/N: " + cartridge.getSerialNumber() + " числится на складе пустым!");
+                break;
+            case RefillCartridge:
+                if (operation.equals("GiveOutCartridge")
+                        || operation.equals("CartridgeAfterConsumer")
+                        || operation.equals("CartridgesToRefueller")
+                        || operation.equals("DeregisterCartridge"))
+                    throw new CheckerException
+                            ("Картриджа с S/N: " + cartridge.getSerialNumber() + " числится у заправщика на заправке!");
+                break;
+            case IssueToConsumer:
+                if (operation.equals("GiveOutCartridge")
+                        || operation.equals("CartridgesFromRefueller")
+                        || operation.equals("CartridgesToRefueller")
+                        || operation.equals("DeregisterCartridge"))
+                    throw new CheckerException
+                            ("Картриджа с S/N: " + cartridge.getSerialNumber() + " числится выданным пользователю!");
+                break;
+            case NotDefine:
+                if (operation.equals("CartridgeAfterConsumer"))
+                    throw new CheckerException
+                            ("Картриджа с S/N: " + cartridge.getSerialNumber() + " не числится выданным пользователю!");
+
+                if (operation.equals("CartridgesFromRefueller"))
+                    throw new CheckerException
+                            ("Картриджа с S/N: " + cartridge.getSerialNumber() + " не числится отправленным на заправку!");
+                break;
         }
 
-        if (operation.equals("CartridgeAfterConsumer")) {
-            cartridgeNotGiveOutCheck(cartridge);
-            deregistrationDateCheck(cartridge);
-            cartridgeAtRefuelingCheck(cartridge);
-        }
-
-        if (operation.equals("CartridgesFromRefueller")) {
-            cartridgeGiveOutCheck(cartridge);
-            cartridgeNotAtRefuelingCheck(cartridge);
-            deregistrationDateCheck(cartridge);
-        }
-
-        if (operation.equals("CartridgesToRefueller")) {
-            cartridgeGiveOutCheck(cartridge);
-            cartridgeAtRefuelingCheck(cartridge);
-            deregistrationDateCheck(cartridge);
-        }
-
-        if (operation.equals("DeregisterCartridge")) {
-            deregistrationDateCheck(cartridge);
-            cartridgeGiveOutCheck(cartridge);
-            cartridgeAtRefuelingCheck(cartridge);
-        }
 
     }
 
-    private void deregistrationDateCheck(Cartridge cartridge) throws CheckerException {
-        if (cartridge.getDeregistrationDate() != null)
-            throw new CheckerException
-                    ("Картриджа с S/N: " + cartridge.getSerialNumber() + " снять с регистрации.");
-    }
+    public StateCartridge getStateCartridge(Cartridge cartridge) {
+        StateCartridge stateCartridge = StateCartridge.NotDefine;
+        Optional<CartridgeForConsumer> cartridgeForConsumer = cartridgeForConsumerService.getLastStateCartridgeForConsumer(cartridge);
+        Optional<CartridgeForRefueller> cartridgeForRefueller = cartridgeForRefuellerService.getLastStateCartridgeForRefueller(cartridge);
 
-    private void cartridgeGiveOutCheck(Cartridge cartridge) throws CheckerException {
-        if (!cartridgeForConsumerService.getOrderForCartridge(cartridge).isEmpty())
-            throw new CheckerException
-                    ("Картриджа с S/N: " + cartridge.getSerialNumber() + " числится выданным.");
-    }
+        if (!cartridgeForConsumer.isEmpty() && !cartridgeForRefueller.isEmpty()) {
+            if (cartridgeForConsumer.get().getDateTheCartridgeWasReturn() != null
+                    && cartridgeForRefueller.get().getDateTheCartridgeWasReturn() != null) {
+                if (cartridgeForConsumer.get()
+                        .getDateTheCartridgeWasReturn()
+                        .isAfter(cartridgeForRefueller.get().getDateTheCartridgeWasReturn()))
+                    stateCartridge = StateCartridge.EmptyInStock;
+                else
+                    stateCartridge = StateCartridge.FullInStock;
+            }
+        } else {
+            if (cartridgeForConsumer.isEmpty() && !cartridgeForRefueller.isEmpty())
+                stateCartridge = StateCartridge.FullInStock;
+            if (cartridgeForRefueller.isEmpty() && !cartridgeForConsumer.isEmpty())
+                stateCartridge = StateCartridge.EmptyInStock;
+        }
 
-    private void cartridgeNotGiveOutCheck(Cartridge cartridge) throws CheckerException {
-        if (cartridgeForConsumerService.getOrderForCartridge(cartridge).isEmpty())
-            throw new CheckerException
-                    ("Картриджа с S/N: " + cartridge.getSerialNumber() + " не числится выданным.");
-    }
+        if (!cartridgeForConsumer.isEmpty())
+            if (cartridgeForConsumer.get().getDateTheCartridgeWasReturn() == null)
+                stateCartridge = StateCartridge.IssueToConsumer;
 
-    private void cartridgeAtRefuelingCheck(Cartridge cartridge) throws CheckerException {
-        if (!cartridgeForRefuellerService.getCartridgeForRefueller(cartridge).isEmpty())
-            throw new CheckerException
-                    ("Картриджа с S/N: " + cartridge.getSerialNumber() + " числиться у заправщика на заправке.");
-    }
+        if (!cartridgeForRefueller.isEmpty())
+            if (cartridgeForRefueller.get().getDateTheCartridgeWasReturn() == null)
+                stateCartridge = StateCartridge.RefillCartridge;
 
-    private void cartridgeNotAtRefuelingCheck(Cartridge cartridge) throws CheckerException {
-        if (cartridgeForRefuellerService.getCartridgeForRefueller(cartridge).isEmpty())
-            throw new CheckerException
-                    ("Картриджа с S/N: " + cartridge.getSerialNumber() + " не числиться у заправщика на заправке.");
+        return stateCartridge;
     }
 }
