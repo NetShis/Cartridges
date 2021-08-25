@@ -22,7 +22,7 @@ public class CartridgeForRefuellerService {
     }
 
     public Optional<CartridgeForRefueller> getCartridgeForRefueller(Cartridge cartridge) {
-        return cartridgeForRefuellerRepository.findCartridgeForRefueller(cartridge);
+        return cartridgeForRefuellerRepository.theCartridgeWasReturnIsNull(cartridge);
     }
 
     public void closeOrders(List<CartridgeForRefueller> cartridgeForRefuellerList) {

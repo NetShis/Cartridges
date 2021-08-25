@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Главная страница</title>
+  <link th:href="@{/styles/style.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<header>
+  <div class="wrapper-logo">
+    <img th:src="@{/img/diary.svg}">
+  </div>
+  <h1>Ни один картридж не будет потерян!</h1>
+</header>
+<main>
+  <div th:each="mapModelStatus: ${mapModelStatus}">
+    <table>
+      <thead>
+      <tr>
+        <th th:text="${mapModelStatus.getKey().getCartridgeModel()}"/>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="status: ${mapModelStatus.getValue()}">
+        <td th:text="${status.getKey()}"/>
+        <td th:text="${status.getValue()}"/>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

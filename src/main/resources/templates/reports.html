@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <link th:href="@{/styles/style.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<header>
+    <div class="wrapper-logo">
+        <img th:src="@{/img/diary.svg}">
+    </div>
+    <h1>Ни один картридж не будет потерян!</h1>
+</header>
+<main>
+    <button class="button-menu"><a href="/reports/cartridge_count_report">Отчет о количестве картриджей</a></button>
+
+</main>
+</body>
+</html>

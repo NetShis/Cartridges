@@ -24,7 +24,7 @@ public class CartridgeForConsumerService {
     }
 
     public Optional<CartridgeForConsumer> getOrderForCartridge(Cartridge cartridge) {
-        return cartridgeForConsumerRepository.findOrderForCartridge(cartridge);
+        return cartridgeForConsumerRepository.theCartridgeWasReturnIsNull(cartridge);
     }
 
     public void save(CartridgeForConsumer cartridgeForConsumer) {

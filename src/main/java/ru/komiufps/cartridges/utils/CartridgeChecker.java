@@ -51,6 +51,15 @@ public class CartridgeChecker {
                     throw new CheckerException
                             ("Картриджа с S/N: " + cartridge.getSerialNumber() + " числится выданным пользователю!");
                 break;
+
+            case Liquidate:
+                if (operation.equals("GiveOutCartridge")
+                        || operation.equals("CartridgesToRefueller")
+                        || operation.equals("DeregisterCartridge"))
+                    throw new CheckerException
+                            ("Картриджа с S/N: " + cartridge.getSerialNumber() + " числится списанным!");
+                break;
+
             case NotDefine:
                 if (operation.equals("CartridgeAfterConsumer"))
                     throw new CheckerException
@@ -67,33 +76,38 @@ public class CartridgeChecker {
 
     public StateCartridge getStateCartridge(Cartridge cartridge) {
         StateCartridge stateCartridge = StateCartridge.NotDefine;
-        Optional<CartridgeForConsumer> cartridgeForConsumer = cartridgeForConsumerService.getLastStateCartridgeForConsumer(cartridge);
-        Optional<CartridgeForRefueller> cartridgeForRefueller = cartridgeForRefuellerService.getLastStateCartridgeForRefueller(cartridge);
-
-        if (!cartridgeForConsumer.isEmpty() && !cartridgeForRefueller.isEmpty()) {
-            if (cartridgeForConsumer.get().getDateTheCartridgeWasReturn() != null
-                    && cartridgeForRefueller.get().getDateTheCartridgeWasReturn() != null) {
-                if (cartridgeForConsumer.get()
-                        .getDateTheCartridgeWasReturn()
-                        .isAfter(cartridgeForRefueller.get().getDateTheCartridgeWasReturn()))
-                    stateCartridge = StateCartridge.EmptyInStock;
-                else
-                    stateCartridge = StateCartridge.FullInStock;
-            }
+        if (cartridge.getDeregistrationDate() != null) {
+            stateCartridge = StateCartridge.Liquidate;
         } else {
-            if (cartridgeForConsumer.isEmpty() && !cartridgeForRefueller.isEmpty())
-                stateCartridge = StateCartridge.FullInStock;
-            if (cartridgeForRefueller.isEmpty() && !cartridgeForConsumer.isEmpty())
-                stateCartridge = StateCartridge.EmptyInStock;
+            Optional<CartridgeForConsumer> cartridgeForConsumer = cartridgeForConsumerService.getLastStateCartridgeForConsumer(cartridge);
+            Optional<CartridgeForRefueller> cartridgeForRefueller = cartridgeForRefuellerService.getLastStateCartridgeForRefueller(cartridge);
+
+            if (!cartridgeForConsumer.isEmpty() && !cartridgeForRefueller.isEmpty()) {
+                if (cartridgeForConsumer.get().getDateTheCartridgeWasReturn() != null
+                        && cartridgeForRefueller.get().getDateTheCartridgeWasReturn() != null) {
+                    if (cartridgeForConsumer.get()
+                            .getDateTheCartridgeWasReturn()
+                            .isAfter(cartridgeForRefueller.get().getDateTheCartridgeWasReturn()))
+                        stateCartridge = StateCartridge.EmptyInStock;
+                    else
+                        stateCartridge = StateCartridge.FullInStock;
+                }
+            } else {
+                if (cartridgeForConsumer.isEmpty() && !cartridgeForRefueller.isEmpty())
+                    stateCartridge = StateCartridge.FullInStock;
+                if (cartridgeForRefueller.isEmpty() && !cartridgeForConsumer.isEmpty())
+                    stateCartridge = StateCartridge.EmptyInStock;
+            }
+
+            if (!cartridgeForConsumer.isEmpty())
+                if (cartridgeForConsumer.get().getDateTheCartridgeWasReturn() == null)
+                    stateCartridge = StateCartridge.IssueToConsumer;
+
+            if (!cartridgeForRefueller.isEmpty())
+                if (cartridgeForRefueller.get().getDateTheCartridgeWasReturn() == null)
+                    stateCartridge = StateCartridge.RefillCartridge;
         }
 
-        if (!cartridgeForConsumer.isEmpty())
-            if (cartridgeForConsumer.get().getDateTheCartridgeWasReturn() == null)
-                stateCartridge = StateCartridge.IssueToConsumer;
-
-        if (!cartridgeForRefueller.isEmpty())
-            if (cartridgeForRefueller.get().getDateTheCartridgeWasReturn() == null)
-                stateCartridge = StateCartridge.RefillCartridge;
 
         return stateCartridge;
     }

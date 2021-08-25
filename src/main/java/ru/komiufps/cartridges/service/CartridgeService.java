@@ -34,4 +34,8 @@ public class CartridgeService {
         cartridgeRepository.save(cartridge);
     }
 
+    public List<Cartridge> getAllCartridge() {
+        return cartridgeRepository.findAll();
+    }
+
 }
