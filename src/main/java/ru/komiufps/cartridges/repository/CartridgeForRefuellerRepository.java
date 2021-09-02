@@ -5,16 +5,16 @@ import org.springframework.data.jpa.repository.Query;
 import ru.komiufps.cartridges.entity.Cartridge;
 import ru.komiufps.cartridges.entity.CartridgeForRefueller;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public interface CartridgeForRefuellerRepository extends JpaRepository<CartridgeForRefueller, Long> {
 
-    @Query("FROM CartridgeForRefueller as c WHERE c.dateTheCartridgeWasReturn = (SELECT max(cfc.dateTheCartridgeWasReturn) FROM CartridgeForRefueller as cfc where cfc.cartridge= ?1)")
-    Optional<CartridgeForRefueller> maxDateTheCartridgeWasReturn (Cartridge cartridge);
-
     @Query("FROM CartridgeForRefueller as c WHERE c.cartridge = ?1 and c.dateTheCartridgeWasReturn is null ")
-    Optional<CartridgeForRefueller> theCartridgeWasReturnIsNull (Cartridge cartridge);
+    Optional<CartridgeForRefueller> theCartridgeWasReturnIsNull(Cartridge cartridge);
 
-
+    @Query("From CartridgeForRefueller as cfr WHERE cfr.dateTheCartridgeWasReturn between ?1 and ?2")
+    ArrayList<CartridgeForRefueller> findAllByDateRefilledCartridges(LocalDateTime start, LocalDateTime end);
 }
 

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Главная страница</title>
+    <link rel="stylesheet" th:href="@{/styles/style.css}"/>
+</head>
+
+<body>
+<header>
+    <div class="wrapper-logo">
+        <img th:src="@{/img/diary.svg}" alt="logo">
+    </div>
+    <h1>Ни один картридж не будет потерян!</h1>
+</header>
+<main>
+    <form method="get" th:action="@{report_on_the_movement_of_cartridges}">
+        <label>Выберите дату с:</label>
+        <input name="start" type="datetime-local">
+        <label>Выберите дату по:</label>
+        <input name="end" type="datetime-local">
+        <input type="submit" value="Сфоримировать отчет">
+    </form>
+    <div class="report-items">
+        <div>
+            <h3>Выданно</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Модель</th>
+                    <th>Кол-во</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="issuedCartridges: ${issuedCartridges}">
+                    <td th:text="${issuedCartridges.getKey()}"/>
+                    <td th:text="${issuedCartridges.getValue()}"/>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3>Заправленно</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Модель</th>
+                    <th>Кол-во</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="refilledCartridges: ${refilledCartridges}">
+                    <td th:text="${refilledCartridges.getKey()}"/>
+                    <td th:text="${refilledCartridges.getValue()}"/>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3>Дефектные картриджы</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Модель</th>
+                    <th>Кол-во</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="defectiveCartridges: ${defectiveCartridges}">
+                    <td th:text="${defectiveCartridges.getKey()}"/>
+                    <td th:text="${defectiveCartridges.getValue()}"/>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+</html>

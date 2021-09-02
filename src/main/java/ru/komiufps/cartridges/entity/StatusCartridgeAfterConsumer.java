@@ -21,4 +21,7 @@ public class StatusCartridgeAfterConsumer {
     @Column(unique = true)
     private String status;
 
+    @JsonProperty(value = "isGoodStatus")
+    private boolean isGoodStatus;
+
 }

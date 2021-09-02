@@ -16,13 +16,6 @@ import java.util.Optional;
 public class CartridgeForConsumerService {
     private final CartridgeForConsumerRepository cartridgeForConsumerRepository;
 
-    public void closeOrders(List<CartridgeForConsumer> cartridgeForConsumerList) {
-        cartridgeForConsumerList.forEach(cartridgeForConsumer -> {
-            cartridgeForConsumer.setDateTheCartridgeWasReturn(LocalDateTime.now());
-            cartridgeForConsumerRepository.save(cartridgeForConsumer);
-        });
-    }
-
     public Optional<CartridgeForConsumer> getOrderForCartridge(Cartridge cartridge) {
         return cartridgeForConsumerRepository.theCartridgeWasReturnIsNull(cartridge);
     }
@@ -31,11 +24,11 @@ public class CartridgeForConsumerService {
         cartridgeForConsumerRepository.save(cartridgeForConsumer);
     }
 
-    public Optional<CartridgeForConsumer> getLastStateCartridgeForConsumer(Cartridge cartridge) {
-        if (!cartridgeForConsumerRepository.theCartridgeWasReturnIsNull(cartridge).isEmpty())
-            return cartridgeForConsumerRepository.theCartridgeWasReturnIsNull(cartridge);
-        else
-            return cartridgeForConsumerRepository.maxDateTheCartridgeWasReturn(cartridge);
+    public List<CartridgeForConsumer> findAllByDateIssuedCartridges(LocalDateTime start, LocalDateTime end) {
+        return cartridgeForConsumerRepository.findAllByDateIssuedCartridges(start, end);
     }
 
+    public List<CartridgeForConsumer> findAllByDateDefectiveCartridges(LocalDateTime start, LocalDateTime end) {
+        return cartridgeForConsumerRepository.findAllByDateDefectiveCartridges(start, end);
+    }
 }

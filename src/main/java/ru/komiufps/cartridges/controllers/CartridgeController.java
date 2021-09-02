@@ -12,6 +12,7 @@ import ru.komiufps.cartridges.service.CartridgeService;
 import ru.komiufps.cartridges.service.StatusCartridgeAfterConsumerService;
 import ru.komiufps.cartridges.utils.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -63,16 +64,21 @@ public class CartridgeController {
 
     @PutMapping("/deregister")
     public BaseResponse deregisterCartridge(@RequestBody List<Cartridge> cartridgeList) {
-        cartridgeService.deregisterCartridge(cartridgeList);
+
+        cartridgeList.forEach(cartridge -> {
+            cartridge.setDeregistrationDate(LocalDate.now());
+            cartridge.setStateCartridge(StateCartridge.Liquidate);
+            cartridgeService.save(cartridge);
+        });
 
         return BaseResponse.builder()
                 .message("Картриджы успешно выведены из эксплуатации.")
                 .build();
     }
 
+
     @PostMapping("/addCartridges")
     public BaseResponse addCartridges(@RequestBody ListOfSerialNumbersToAdd listOfSerialNumbersToAdd) {
-        System.out.println(listOfSerialNumbersToAdd.toString());
 
         listOfSerialNumbersToAdd.getSerialNumbers()
                 .forEach(serialNumber -> {
@@ -90,14 +96,9 @@ public class CartridgeController {
 
 
     @GetMapping("/getStatus")
-    public CurrentStatusOfCartridge getStatus(@RequestParam(value = "serialNumber") String serialNumber) {
-        CurrentStatusOfCartridge currentStatusOfCartridge = new CurrentStatusOfCartridge();
+    public Cartridge getStatus(@RequestParam(value = "serialNumber") String serialNumber) {
         Cartridge cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
-
-        currentStatusOfCartridge.setCartridge(cartridge);
-        currentStatusOfCartridge.setStateCartridge(cartridgeChecker.getStateCartridge(cartridge));
-
-        return currentStatusOfCartridge;
+        return cartridge;
     }
 
 }

@@ -16,20 +16,22 @@
   <h1>Ни один картридж не будет потерян!</h1>
 </header>
 <main>
-  <div th:each="mapModelStatus: ${mapModelStatus}">
-    <table>
-      <thead>
-      <tr>
-        <th th:text="${mapModelStatus.getKey().getCartridgeModel()}"/>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="status: ${mapModelStatus.getValue()}">
-        <td th:text="${status.getKey()}"/>
-        <td th:text="${status.getValue()}"/>
-      </tr>
-      </tbody>
-    </table>
+  <div class="report-items">
+    <div th:each="mapModelStatus: ${mapModelStatus}">
+      <table>
+        <thead>
+        <tr>
+          <th th:text="${mapModelStatus.getKey()}"/>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="status: ${mapModelStatus.getValue()}">
+          <td th:text="${status.getKey()}"/>
+          <td th:text="${status.getValue()}"/>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </main>
 </body>

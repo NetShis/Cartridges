@@ -16,4 +16,8 @@ public class StatusCartridgeAfterConsumerService {
         return statusCartridgeAfterConsumerRepository.findAll();
     }
 
+    public StatusCartridgeAfterConsumer findById(Long id) {
+        return statusCartridgeAfterConsumerRepository.findById(id).get();
+    }
+
 }

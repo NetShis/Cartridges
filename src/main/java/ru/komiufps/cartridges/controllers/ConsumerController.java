@@ -7,11 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.komiufps.cartridges.entity.*;
 import ru.komiufps.cartridges.service.*;
-import ru.komiufps.cartridges.utils.BaseResponse;
-import ru.komiufps.cartridges.utils.CartridgeChecker;
-import ru.komiufps.cartridges.utils.CheckerException;
-import ru.komiufps.cartridges.utils.ConsumerReplacementCartridgesList;
+import ru.komiufps.cartridges.utils.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -39,13 +37,26 @@ public class ConsumerController {
 
     @PutMapping("/closeOrders")
     public BaseResponse closeOrders(@RequestBody List<CartridgeForConsumer> cartridgeForConsumerList) {
-        cartridgeForConsumerService.closeOrders(cartridgeForConsumerList);
+
+        cartridgeForConsumerList.forEach(cartridgeForConsumer -> {
+            cartridgeForConsumer.setDateTheCartridgeWasReturn(LocalDateTime.now());
+            Cartridge cartridge = cartridgeForConsumer.getCartridge();
+
+            if (statusCartridgeAfterConsumerService.findById(cartridgeForConsumer.getStatusCartridgeAfterConsumer().getId()).isGoodStatus())
+                cartridge.setStateCartridge(StateCartridge.EmptyInStock);
+            else
+                cartridge.setStateCartridge(StateCartridge.DefectiveInStock);
+
+            cartridgeService.save(cartridge);
+            cartridgeForConsumerService.save(cartridgeForConsumer);
+        });
 
         return BaseResponse
                 .builder()
                 .message("Заказ успешно закрыт.")
                 .build();
     }
+
 
     @PostMapping("/createOrder")
     public BaseResponse createOrder(@RequestBody ConsumerReplacementCartridgesList consumerReplacementCartridgesList) {
@@ -59,6 +70,9 @@ public class ConsumerController {
                     CartridgeForConsumer cartridgeForConsumer = new CartridgeForConsumer();
                     cartridgeForConsumer.setOrderForConsumer(orderForConsumer);
                     cartridgeForConsumer.setCartridge(cartridge);
+                    cartridge.setStateCartridge(StateCartridge.IssueToConsumer);
+
+                    cartridgeService.save(cartridge);
                     cartridgeForConsumerService.save(cartridgeForConsumer);
                 });
 

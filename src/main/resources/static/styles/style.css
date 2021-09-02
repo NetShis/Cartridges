@@ -2,7 +2,6 @@ body {
     background-color: #F5F5F5;
 }
 
-
 header {
     display: flex;
     justify-content: center;
@@ -22,7 +21,7 @@ h3 {
     margin: 5px;
 }
 
-main {
+.menu {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -45,6 +44,27 @@ main {
 .button-menu:hover {
     background-color: rgb(25, 55, 255);
     color: white;
+}
+
+.report-items {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.report-items div {
+    margin: 25px;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+form input {
+    margin: 0 10px 0 10px;
 }
 
 .modal-window table {

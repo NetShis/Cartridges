@@ -7,7 +7,6 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.komiufps.cartridges.entity.Cartridge;
 import ru.komiufps.cartridges.repository.CartridgeRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -21,13 +20,6 @@ public class CartridgeService {
                 .findCartridgeSerialNumber(serialNumber)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Картриджа с S/N: " + serialNumber + " нет в базе"));
-    }
-
-    public void deregisterCartridge(List<Cartridge> cartridgeList) {
-        cartridgeList.forEach(cartridge -> {
-            cartridge.setDeregistrationDate(LocalDate.now());
-            cartridgeRepository.save(cartridge);
-        });
     }
 
     public void save(Cartridge cartridge) {

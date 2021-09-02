@@ -65,7 +65,6 @@ $.modal = function (options) {
         cartridgeOrderListForConsumer: [],
         cartridgeOrderListForRefueller: [],
         allStatusAfterConsumer: [],
-        allStatusAfterRefueller: [],
         cartridgeOrderListForConsumerAfterFirstStep: [],
 
         open() {
@@ -76,9 +75,6 @@ $.modal = function (options) {
 
             _request('GET', '/consumer/getAllStatusAfterConsumer',
                 data => this.allStatusAfterConsumer = data)
-
-            _request('GET', '/refueller/getAllStatusAfterRefueller',
-                data => this.allStatusAfterRefueller = data)
 
             this.myModal = _createModal(options)
             document.body.appendChild(this.myModal)

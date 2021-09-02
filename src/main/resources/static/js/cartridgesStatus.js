@@ -31,19 +31,19 @@ const cartridgesStatus = $.modal({
         let tr = document.createElement('tr')
         let td = document.createElement('td')
 
-        td.textContent = data['cartridge']['serialNumber']
+        td.textContent = data['serialNumber']
         tr.appendChild(td)
 
         td = document.createElement('td')
-        td.textContent = data['cartridge']['cartridgeModel']['cartridgeModel']
+        td.textContent = data['cartridgeModel']['cartridgeModel']
         tr.appendChild(td)
 
         td = document.createElement('td')
-        td.textContent = data['cartridge']['registrationDate']
+        td.textContent = data['registrationDate']
         tr.appendChild(td)
 
         td = document.createElement('td')
-        td.textContent = data['cartridge']['deregistrationDate']
+        td.textContent = data['deregistrationDate']
         tr.appendChild(td)
 
         td = document.createElement('td')

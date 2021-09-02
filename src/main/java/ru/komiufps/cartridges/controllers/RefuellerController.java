@@ -6,12 +6,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ru.komiufps.cartridges.entity.*;
-import ru.komiufps.cartridges.service.*;
+import ru.komiufps.cartridges.entity.Cartridge;
+import ru.komiufps.cartridges.entity.CartridgeForRefueller;
+import ru.komiufps.cartridges.entity.OrderForRefueller;
+import ru.komiufps.cartridges.entity.Refueller;
+import ru.komiufps.cartridges.service.CartridgeForRefuellerService;
+import ru.komiufps.cartridges.service.CartridgeService;
+import ru.komiufps.cartridges.service.OrderForRefuellerService;
+import ru.komiufps.cartridges.service.RefuellerService;
 import ru.komiufps.cartridges.utils.BaseResponse;
 import ru.komiufps.cartridges.utils.CartridgeChecker;
 import ru.komiufps.cartridges.utils.CheckerException;
+import ru.komiufps.cartridges.utils.StateCartridge;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -23,7 +31,6 @@ public class RefuellerController {
     private final RefuellerService refuellerService;
     private final OrderForRefuellerService orderForRefuellerService;
     private final CartridgeForRefuellerService cartridgeForRefuellerService;
-    private final StatusCartridgeAfterRefuellerService statusCartridgeAfterRefuellerService;
     private final CartridgeService cartridgeService;
     private final CartridgeChecker cartridgeChecker;
 
@@ -37,6 +44,9 @@ public class RefuellerController {
             CartridgeForRefueller cartridgeForRefueller = new CartridgeForRefueller();
             cartridgeForRefueller.setOrderForRefueller(orderForRefueller);
             cartridgeForRefueller.setCartridge(cartridge);
+            cartridge.setStateCartridge(StateCartridge.RefillCartridge);
+
+            cartridgeService.save(cartridge);
             cartridgeForRefuellerService.save(cartridgeForRefueller);
         });
 
@@ -49,11 +59,6 @@ public class RefuellerController {
     @GetMapping("/getDefaultRefueller")
     public Refueller getDefaultRefueller() {
         return refuellerService.getDefaultRefueller();
-    }
-
-    @GetMapping("/getAllStatusAfterRefueller")
-    public List<StatusCartridgeAfterRefueller> getAllStatusAfterRefueller() {
-        return statusCartridgeAfterRefuellerService.getAllStatusAfterRefueller();
     }
 
     @GetMapping("/getOrder")
@@ -73,7 +78,13 @@ public class RefuellerController {
 
     @PutMapping("/closeOrders")
     public BaseResponse closeOrders(@RequestBody List<CartridgeForRefueller> cartridgeForRefuellerList) {
-        cartridgeForRefuellerService.closeOrders(cartridgeForRefuellerList);
+        cartridgeForRefuellerList.forEach(cartridgeForRefuell -> {
+            cartridgeForRefuell.setDateTheCartridgeWasReturn(LocalDateTime.now());
+            Cartridge cartridge = cartridgeForRefuell.getCartridge();
+            cartridge.setStateCartridge(StateCartridge.FullInStock);
+            cartridgeService.save(cartridge);
+            cartridgeForRefuellerService.save(cartridgeForRefuell);
+        });
 
         return BaseResponse
                 .builder()
