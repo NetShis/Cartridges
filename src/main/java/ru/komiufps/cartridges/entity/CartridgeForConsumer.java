@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
-@Table(indexes = @Index(columnList = "cartridge_id, dateTheCartridgeWasReturn"))
 public class CartridgeForConsumer {
 
     @Id
