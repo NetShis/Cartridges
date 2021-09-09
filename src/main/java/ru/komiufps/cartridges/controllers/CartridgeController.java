@@ -9,7 +9,6 @@ import ru.komiufps.cartridges.entity.Cartridge;
 import ru.komiufps.cartridges.entity.CartridgeModel;
 import ru.komiufps.cartridges.service.CartridgeModelService;
 import ru.komiufps.cartridges.service.CartridgeService;
-import ru.komiufps.cartridges.service.StatusCartridgeAfterConsumerService;
 import ru.komiufps.cartridges.utils.*;
 
 import java.time.LocalDate;
@@ -24,7 +23,6 @@ import java.util.List;
 public class CartridgeController {
     private final CartridgeService cartridgeService;
     private final CartridgeModelService cartridgeModelService;
-    private final StatusCartridgeAfterConsumerService statusCartridgeAfterConsumerService;
     private final CartridgeChecker cartridgeChecker;
 
     @GetMapping("/getAllModels")
@@ -96,9 +94,9 @@ public class CartridgeController {
 
 
     @GetMapping("/getStatus")
-    public Cartridge getStatus(@RequestParam(value = "serialNumber") String serialNumber) {
+    public CartridgeStateWidthDescriptionInRussian getStatus(@RequestParam(value = "serialNumber") String serialNumber) {
         Cartridge cartridge = cartridgeService.getCartridgeBySerialNumber(serialNumber);
-        return cartridge;
+        return new CartridgeStateWidthDescriptionInRussian(cartridge);
     }
 
 }

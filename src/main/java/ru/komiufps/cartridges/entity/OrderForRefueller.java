@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
+@Table(indexes = @Index(columnList = "orderDate"))
 public class OrderForRefueller {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

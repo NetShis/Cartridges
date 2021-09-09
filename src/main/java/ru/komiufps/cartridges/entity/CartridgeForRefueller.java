@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
+@Table(indexes = @Index(columnList = "dateTheCartridgeWasReturn"))
 public class CartridgeForRefueller {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

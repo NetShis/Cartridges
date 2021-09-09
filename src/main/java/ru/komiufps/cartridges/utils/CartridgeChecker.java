@@ -60,7 +60,9 @@ public class CartridgeChecker {
 
             case Liquidate:
                 if (operation.equals("GiveOutCartridge")
+                        || operation.equals("CartridgeAfterConsumer")
                         || operation.equals("CartridgesToRefueller")
+                        || operation.equals("CartridgesFromRefueller")
                         || operation.equals("DeregisterCartridge"))
                     throw new CheckerException
                             ("Картриджа с S/N: " + cartridge.getSerialNumber() + " числится списанным!");

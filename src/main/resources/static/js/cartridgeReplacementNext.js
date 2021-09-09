@@ -51,7 +51,7 @@ const cartridgeReplacementNext = $.modal({
             </table>`,
 
     method: 'GET',
-    path: '/cartridge/getCartridgeBySerialNumber?operation=giveOutCartridge&serialNumber=',
+    path: '/cartridge/getCartridgeBySerialNumber?operation=GiveOutCartridge&serialNumber=',
     handler: function (data) {
 
         let replace = document.getElementById(data['cartridgeModel']['cartridgeModel'])

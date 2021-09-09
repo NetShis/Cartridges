@@ -2,19 +2,19 @@ INSERT INTO cartridge_model (cartridge_model)
 VALUES ('78');
 
 INSERT INTO cartridge (deregistration_date, registration_date, serial_number, cartridge_model_id, state_cartridge)
-VALUES (null, '2021-07-14', '78_1', 1, 3);
+VALUES (null, '2021-07-14', '1111', 1, 3);
 
 INSERT INTO cartridge (deregistration_date, registration_date, serial_number, cartridge_model_id, state_cartridge)
-VALUES (null, '2021-07-15', '78_2', 1, 6);
+VALUES (null, '2021-07-15', '2222', 1, 6);
 
 INSERT INTO cartridge_model (cartridge_model)
 VALUES ('12');
 
 INSERT INTO cartridge (deregistration_date, registration_date, serial_number, cartridge_model_id, state_cartridge)
-VALUES (null, '2021-07-15', '12_3', 2, 3);
+VALUES (null, '2021-07-15', '3333', 2, 3);
 
 INSERT INTO cartridge (deregistration_date, registration_date, serial_number, cartridge_model_id, state_cartridge)
-VALUES (null, '2021-07-16', '12_4', 2, 6);
+VALUES (null, '2021-07-16', '4444', 2, 6);
 
 INSERT INTO consumer (name_of_consumer)
 VALUES ('207_кабинет');

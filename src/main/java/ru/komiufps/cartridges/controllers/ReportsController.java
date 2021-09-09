@@ -47,18 +47,20 @@ public class ReportsController {
 
                 mapModelStatus.put(cartridgeModelStr, statusCounts);
             }
+
+            String getDescriptionInRussian = cartridge.getStateCartridge().getDescriptionInRussian();
             mapModelStatus
                     .get(cartridgeModelStr)
-                    .put(cartridge.getStateCartridge().getDescriptionInRussian()
+                    .put(getDescriptionInRussian
                             , mapModelStatus
                                     .get(cartridgeModelStr)
-                                    .get(cartridge.getStateCartridge().getDescriptionInRussian()) + 1);
+                                    .get(getDescriptionInRussian) + 1);
 
             mapModelStatus
                     .get(cartridgeModelStr)
                     .put("Всего", mapModelStatus
                             .get(cartridgeModelStr)
-                            .get(cartridge.getStateCartridge().getDescriptionInRussian()) + 1);
+                            .get("Всего") + 1);
         }
 
         model.addAttribute("mapModelStatus", mapModelStatus);

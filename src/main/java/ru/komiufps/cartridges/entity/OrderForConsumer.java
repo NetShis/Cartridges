@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
+@Table(indexes = @Index(columnList = "orderDate"))
 public class OrderForConsumer {
 
     @Id
